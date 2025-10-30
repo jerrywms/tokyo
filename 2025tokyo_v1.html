@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>東京・橫濱・鎌倉・河口湖 11日行程 — 初版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Noto+Serif+TC:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+      summary::-webkit-details-marker { display: none; }
+      body { font-family: 'Noto Sans TC', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans CJK TC', sans-serif; }
+      .title-font { font-family: 'Noto Serif TC', ui-serif, Georgia, serif; letter-spacing: .2px; }
+      .gallery-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .5rem; }
+      @media (min-width: 768px) { .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); } }
+      .gallery-item { overflow:hidden; border-radius: .5rem; border:1px solid rgb(229 231 235); background:#fff; }
+      .aspect-fixed { aspect-ratio: 4/3; }
+      .gallery-item img { width:100%; height:100%; object-fit: cover; display:block; }
+      .mode-natural .gallery-item { aspect-ratio: auto; }
+      .mode-natural .gallery-item img { height:auto; object-fit: contain; background:#000; }
+      dialog#lightbox { width: min(96vw, 1200px); border: none; padding: 0; background: transparent; }
+      dialog#lightbox::backdrop { background: rgba(0,0,0,.7); }
+      .lightbox-inner { position: relative; padding: .5rem; background: #000; border-radius: .75rem; }
+      .lightbox-img { max-width: 92vw; max-height: 86vh; display: block; margin: auto; }
+      .lightbox-close { position:absolute; top:.5rem; right:.5rem; background: rgba(255,255,255,.9); border: 1px solid rgb(229 231 235); padding: .25rem .5rem; border-radius: .5rem; font-size: .875rem; }
+      .lightbox-nav { position:absolute; top:50%; transform: translateY(-50%); background: rgba(255,255,255,.85); border:1px solid rgb(229 231 235); padding:.35rem .6rem; border-radius:.5rem; font-size:1rem; user-select:none; }
+      .lightbox-prev { left:.5rem; }
+      .lightbox-next { right:.5rem; }
+      .lightbox-counter { position:absolute; bottom:.5rem; right:.5rem; background: rgba(0,0,0,.6); color:#fff; font-size:.75rem; padding:.2rem .5rem; border-radius:.375rem; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-neutral-50 body-font">
+    <div class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/80 border-b">
+      <div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-5 h-5 rounded bg-black"></span>
+          <h1 class="text-xl sm:text-2xl font-semibold tracking-tight title-font">東京・橫濱・鎌倉・河口湖 11日行程</h1>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <button id="modeToggle" class="border rounded-md px-3 py-1.5 text-xs">顯示模式：一致尺寸</button>
+          <button id="dljson" class="bg-black text-white rounded-md px-3 py-1.5 text-xs">匯出 JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="mx-auto max-w-6xl px-4 pb-16 pt-6">
+      <section class="mb-6">
+        <div class="relative overflow-hidden rounded-2xl border shadow-sm">
+          <img src="https://static.gltjp.com/glt/data/article/22000/21054/20250619_195350_87a39b19_w1920.webp" alt="Hero" class="w-full h-64 object-cover" fetchpriority="high" referrerpolicy="no-referrer" crossorigin="anonymous">
+        </div>
+      </section>
+
+      <div class="my-6 border-t"></div>
+
+      <section class="mb-8" id="flights">
+        <div class="flex items-center gap-2 py-2">
+          <span class="text-xl">✈️</span>
+          <h2 class="text-2xl font-semibold tracking-tight title-font">航班</h2>
+        </div>
+        <div class="shadow-sm rounded-xl border bg-white scroll-mt-24">
+          <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-xl border p-4">
+              <div class="flex items-center gap-2 mb-2"><span class="inline-flex items-center justify-center rounded-full bg-gray-100 border px-2 py-0.5 text-xs">去程</span></div>
+              <div class="text-base text-gray-700 font-medium">日本航空 JAL</div>
+              <div class="flex items-center gap-2 mt-1 text-sm"><span class="inline-flex items-center rounded-full bg-gray-100 border px-2 py-0.5">JL96</span><span>2025/12/11 (四)</span></div>
+              <div class="grid grid-cols-2 gap-2 items-center mt-2 text-base">
+                <div class="flex items-center gap-2 text-lg font-semibold">09:10</div><div class="text-right text-gray-500">台北松山機場 第一航廈 (TSA T1)</div>
+                <div class="flex items-center gap-2 text-lg font-semibold">13:00</div><div class="text-right text-gray-500">羽田機場 第三航廈 (HND T3)</div>
+              </div>
+            </div>
+            <div class="rounded-xl border p-4">
+              <div class="flex items-center gap-2 mb-2"><span class="inline-flex items-center justify-center rounded-full bg-gray-100 border px-2 py-0.5 text-xs">回程</span></div>
+              <div class="text-base text-gray-700 font-medium">日本航空 JAL</div>
+              <div class="flex items-center gap-2 mt-1 text-sm"><span class="inline-flex items-center rounded-full bg-gray-100 border px-2 py-0.5">JL97</span><span>2025/12/21 (日)</span></div>
+              <div class="grid grid-cols-2 gap-2 items-center mt-2 text-base">
+                <div class="flex items-center gap-2 text-lg font-semibold">08:40</div>
+                <div class="text-right text-gray-500">羽田機場 第三航廈 (HND T3)</div>
+                <div class="flex items-center gap-2 text-lg font-semibold">11:40</div>
+                <div class="text-right text-gray-500">台北松山機場 第一航廈 (TSA T1)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-8" id="itinerary">
+        <div class="flex items-center gap-2 py-2">
+          <span class="text-xl">🗓️</span>
+          <h2 class="text-2xl font-semibold tracking-tight title-font">每日行程</h2>
+        </div>
+        <div id="itineraryList" class="space-y-6"></div>
+      </section>
+
+      <dialog id="lightbox">
+        <div class="lightbox-inner">
+          <button id="lightboxPrev" class="lightbox-nav lightbox-prev" aria-label="上一張">‹</button>
+          <img id="lightboxImg" class="lightbox-img" alt="preview">
+          <button id="lightboxNext" class="lightbox-nav lightbox-next" aria-label="下一張">›</button>
+          <div id="lightboxCounter" class="lightbox-counter" aria-live="polite"></div>
+          <button id="lightboxClose" class="lightbox-close">關閉 ✕</button>
+        </div>
+      </dialog>
+    </main>
+
+    <script>
+      const DATA = {
+        title: "東京・橫濱・鎌倉・河口湖 11日行程",
+        subtitle: "初版骨架（已套用 D1–D11；D5=紅線、D6=綠線）",
+        hero: { image: "https://static.gltjp.com/glt/data/article/22000/21054/20250619_195350_87a39b19_w1920.webp", caption: "示意圖，可替換" },
+        flights: {
+          outbound: { airline: "日本航空 JAL", number: "JL96", date: "2025/12/11 (四)", depTime: "09:10", dep: "台北松山 第一航廈 TSA", arrTime: "13:00", arr: "羽田 第三航廈 HND" },
+          inbound:  { airline: "日本航空 JAL", number: "JL97", date: "2025/12/21 (日)", depTime: "08:40", dep: "羽田 第三航廈 HND", arrTime: "11:40", arr: "台北松山 第一航廈 TSA" }
+        },
+        itinerary: [
+          { day:1, date:"2025/12/11 (四)", title:"松山 → 羽田 → 橫濱｜港未來黃昏散步", gallery:[
+            "https://yokohama-air-cabin.jp/publish/wp-content/uploads/2021/11/03.jpg",
+            "https://www.fashion-press.net/img/news/138133/WJ4.jpg",
+            "https://www.fashion-press.net/img/news/124094/xLI.jpg"
+          ] },
+          { day:2, date:"2025/12/12 (五)", title:"鎌倉散步①｜鶴岡八幡宮・小町通・報國寺", gallery:[
+            "https://www.kanagawa-kankou.or.jp/storage/post_picture/[1200_1200]_20240119121738_pixta_79365946_M.jpg",
+            "https://static.gltjp.com/glt/data/article/21000/20310/20230510_115855_6a144d1c_w1920.webp",
+            "https://static.gltjp.com/glt/data/directory/12000/11143/20200813_111648_6f8949ba_w1920.webp",
+            "https://static.gltjp.com/glt/data/article/21000/20310/20230510_115447_51e5879d_w1920.webp"
+          ] },
+          { day:3, date:"2025/12/13 (六)", title:"鎌倉散步②｜長谷寺・大佛・江之島『湘南之寶石』", gallery:[
+            "https://upload.wikimedia.org/wikipedia/commons/c/cf/230128_Kamakura_Daibutsu_Japan04s3.jpg",
+            "https://www.hasedera.jp/sys2024/wp-content/uploads/2024/03/024d2e1f23b81a5d21e99c49ddce4a2f.jpg",
+            "https://enokama.jp/wp-content/uploads/2022/06/23_Course1_Enoden-2.jpg",
+            "https://trip.pref.kanagawa.jp/img/spots/photos/hero/93cb7c954a73c5263bfce3baaa6dc656-1920x1080.jpg"
+          ] },
+          { day:4, date:"2025/12/14 (日)", title:"御殿場｜時之栖燈飾・溫泉休息", gallery:[
+            "https://www.tokinosumika.com/wp-content/themes/tokinosumika-cms_20240703/img/img_page_list/asobu/img_asobu9.jpg",
+            "https://www.tokinosumika.com/wp-content/uploads/2025/10/%E3%82%B9%E3%83%AD%E3%83%BC%E5%A4%9C%E6%99%AF-1536x1152.jpg",
+            "https://www.tokinosumika.com/wp-content/uploads/2025/10/%E3%83%84%E3%83%AA%E3%83%BC-1536x1152.jpg",
+            "https://www.tokinosumika.com/wp-content/themes/tokinosumika-cms_20240703/img/activity/hunsui/hunsui14.jpg"
+          ] },
+          { day:5, date:"2025/12/15 (一)", title:"河口湖站 → 音樂盒之森 → 大石公園（自然生活館）", gallery:[
+            "https://www.fujiginkei.jp/images/img_main_home_0101.jpg",
+            "https://d10pyp7ylo9bub.cloudfront.net/2018/03/amain1.jpg",
+            "https://d1grca2t3zpuug.cloudfront.net/2025/05/kk24119252_m-870x500-1747986200.webp",
+            "https://d1grca2t3zpuug.cloudfront.net/2024/03/20240301oishi2.jpg"
+          ] },
+          { day:6, date:"2025/12/16 (二)", title:"河口湖站 → 西湖いやしの里根場 → 天上山纜車 → 遊覽船", gallery:[
+            "https://saikoiyashinosatonenba.jp/wp-content/uploads/2020/12/gallery_winter_002.jpg",
+            "https://www.mtfujiropeway.jp/about/cqotof0000000cqq-img/cqotof0000000d62.jpg",
+            "https://www.mtfujiropeway.jp/about/cqotof0000000cqq-img/cqotof0000000d4z.jpg",
+            "https://www.fujigokokisen.jp/images/appare/gallery/2.jpg"
+          ] },
+          { day:7, date:"2025/12/17 (三)", title:"下吉田・新倉富士淺間神社 → 富士回遊 → 東京", gallery:[
+            "https://mediaim.expedia.com/destination/1/f35a4ca1d1c5d73247e253ac69f1a55b.jpg",
+            "https://static.gltjp.com/glt/data/article/22000/21023/20250520_130727_d9968df9_w1920.webp",
+            "https://www.fujikyu-railway.jp/common/images/fujikaiyuu/train1.jpg",
+            "https://www.fashion-press.net/img/news/125226/rdg.jpg"
+          ] },
+          { day:8, date:"2025/12/18 (四)", title:"東京｜晴空塔整日（觀景台・Solamachi・墨田水族館）", gallery:[
+            "https://d4y1bmgncyek9.cloudfront.net/uploads/activity/images/454/large_07ca9b46-cc82-4151-a3bb-372444a2e885.jpg",
+            "https://res.klook.com/image/upload/fl_lossy.progressive,q_85/c_fill,w_1000/v1617785705/blog/cgwtxi43nqlqv7peo4bh.webp",
+            "https://svcstrg.cld.navitime.jp/travelguide/p13060002/p13060002_01.jpg",
+            "https://www.fashion-press.net/img/news/110181/zGM.jpg"
+          ] },
+          { day:9, date:"2025/12/19 (五)", title:"東京｜東京車站・丸之內・六本木燈飾", gallery:[
+            "https://www.bubu-jp.com/wp-content/uploads/2024/03/pixta_92563639_M.jpg",
+            "https://www.fashion-press.net/img/news/138459/cMA.jpg",
+            "https://www.fashion-press.net/img/news/138783/aPk.jpg",
+            "https://www.fashion-press.net/img/news/138783/bl8.jpg"
+          ] },
+          { day:10, date:"2025/12/20 (六)", title:"東京｜澀谷探索 → 羽田飯店入住", gallery:[
+            "https://www.gotokyo.org/tc/destinations/western-tokyo/shibuya/images/main.jpg",
+            "https://www.shibuya-scramble-square.com/sky/images/share_image.png",
+            "https://www.ppaper.net/wp-content/uploads/2024/02/img_65dcd86848b37.jpg",
+            "https://www.fashion-press.net/img/news/111293/AWA.jpg"
+          ] },
+          { day:11, date:"2025/12/21 (日)", title:"羽田 → 松山｜返台日", gallery:[
+            "https://tokyo-haneda.com/site_resource/enjoy/img/enjoy__img_recommended_deck_t3_01.jpg",
+            "https://tokyo-haneda.com/site_resource/enjoy/img/enjoy__img_recommended_deck_t1_04.jpg"
+          ] }
+        ]
+      };
+
+      const DETAILS = {
+        1: {
+          transport: [
+            "JL96 松山一航 09:10 → 羽田三航 13:00",
+            "羽田 → 橫濱：京急線約30分直達，轉乘少、行李友善",
+            "傍晚前往 港未來 海邊看夕陽與燈飾"
+          ],
+          meals: {
+            breakfast: "—",
+            lunch: "—",
+            dinner: "Bills 橫濱紅磚倉庫店、Anniversaire Café、横浜ワールドポーターズ 美食街（視人潮與預約情況彈性調整）。"
+          },
+          lodging: "Hotel New Otani Yokohama Premium（ホテルニューオータニ横浜プレミアム）",
+          summary: "抵達日本後直達橫濱，黃昏～夜間散步港未來、紅磚倉庫與 Yokohama Milight 燈海。",
+          sections: [
+            { title: "景點與亮點", items:[
+              "港未來海灣步道：新港區→摩天輪（Cosmo Clock 21）→女王廣場",
+              "紅磚倉庫聖誕市集：冬季限定，適合熱紅酒與耶誕拍照",
+              "ヨコハマミライト（Yokohama Milight）：橫濱站東口～Grand Mall Park 冬季燈飾"
+            ]},
+            { title: "餐飲與購物", items:[
+              "MARK IS／World Porters：多品牌美食，採買伴手禮方便",
+              "Anniversaire Café：看摩天輪夜景",
+              "Queen’s Square／Landmark Plaza：藥妝與超市採買"
+            ]},
+            { title: "小提醒", items:["假日人潮多，動線放慢","海風大注意保暖與止滑鞋"]}
+          ]
+        },
+        2: {
+          transport: ["橫濱 → 鎌倉 約35分（JR/私鐵）","以步行+短程公車為主","下午安排 報國寺 竹林茶屋"],
+          meals: {
+            breakfast: "IWATA 咖啡店。",
+            lunch: "小町通（可選 段葛こ寿々 等）。",
+            dinner: "七里濱 珊瑚礁本店（炸牛排咖哩）。"
+          },
+          lodging: "Kamakura Prince Hotel（鎌倉プリンスホテル）",
+          summary: "鶴岡八幡宮、小町通採買與甜點，午後報國寺抹茶，晚宿七里濱海景房。",
+          sections: [
+            { title: "景點與亮點", items:["鶴岡八幡宮","小町通 商店街","報國寺 竹林＋抹茶","（備案）北鎌倉：圓覺寺／明月院"]},
+            { title: "餐飲與購物", items:["鎌倉五山 和食套餐","段葛こ寿々 蕎麥麵","小町通：蜂蜜、豆菓子、長谷寺周邊甜點"]},
+            { title: "小提醒", items:["報國寺階梯多，請放慢","時間不足可略過北鎌倉"]}
+          ]
+        },
+        3: {
+          transport: ["建議購買 江之電一日券","傍晚～夜間前往江之島 Sea Candle 觀燈飾"],
+          meals: {
+            breakfast: "Bills 七里濱。",
+            lunch: "長谷寺 海光庵。",
+            dinner: "しらす問屋 とびっちょ（江之島）。"
+          },
+          lodging: "Kamakura Prince Hotel（鎌倉プリンスホテル）",
+          summary: "長谷寺看海景、高德院大佛、夜訪『湘南之寶石』。",
+          sections: [
+            { title: "景點與亮點", items:["長谷寺（海景觀景台）","高德院（鎌倉大佛）","江之島 Sea Candle 夜景"]},
+            { title: "餐飲與購物", items:["江之電周邊小店（鐵道周邊紀念品）","江之島商店街：甜點、海鮮仙貝"]},
+            { title: "小提醒", items:["長谷寺／大佛建議上午造訪","江之島可搭電梯上塔，節省體力"]}
+          ]
+        },
+        4: {
+          transport: ["鎌倉 → 御殿場 約2小時（JR+轉乘）","御殿場站 → 時之栖：巴士/計程車約30分","燈飾點燈約16:30，黃昏前抵達"],
+          meals: {
+            breakfast: "Pacific DRIVE-IN。",
+            lunch: "御殿場（站前或時之栖園區內）。",
+            dinner: "時之栖 園內餐廳（御殿場高原啤酒餐廳為備案）。"
+          },
+          lodging: "Toyoko Inn Gotemba-eki-mae（東横INN 御殿場駅前）",
+          summary: "時之栖燈海＋溫泉休息，適合取景：光之隧道、中央廣場、富士山剪影。",
+          sections: [
+            { title: "溫泉", items:["氣楽坊 或 御殿場溫泉會館（備浴巾）"]},
+            { title: "餐飲與購物", items:["時之栖園內伴手禮：餅乾、啤酒、聖誕小物","御殿場 Premium Outlets：運動品牌與戶外裝備"]},
+            { title: "小提醒", items:["夜間氣溫低，備保暖衣物","確認返程巴士／計程車時刻"]}
+          ]
+        },
+        5: {
+          transport: ["御殿場 → 河口湖 約1小時20分","河口湖站 → 音樂盒之森 → 大石公園（自然生活館）：周遊巴士紅線"],
+          meals: {
+            breakfast: "—",
+            lunch: "ほうとう不動。",
+            dinner: "飯店懷石。"
+          },
+          lodging: "Koraku Onyado Fuji Ginkei（湖楽おんやど 富士吟景）",
+          summary: "音樂盒之森、小歇大石公園自然生活館；午後沿湖步行取景，黃昏至夜拍富士倒影。",
+          sections: [
+            { title: "景點與亮點", items:["河口湖 音樂盒之森美術館","大石公園／自然生活館（富士山觀景點）","河口湖畔步道（夕景）"]},
+            { title: "餐飲與購物", items:["音樂盒之森館內咖啡／禮品店","自然生活館：果醬、薰衣草商品","河口湖站前：伴手禮店、便利商店"]},
+            { title: "小提醒", items:["紅線班距請先查時刻表，避開末班","飯店晚餐最後入席時間留意，提早回到飯店"]}
+          ]
+        },
+        6: {
+          transport: ["河口湖站 → 西湖いやしの里根場（綠線）","午後：天上山 纜車 → 河口湖 遊覽船"],
+          meals: {
+            breakfast: "—",
+            lunch: "食事処 里山（西湖いやしの里 根場；或：小作／里の駅）。",
+            dinner: "飯店或近站居酒屋。"
+          },
+          lodging: "Koraku Onyado Fuji Ginkei（湖楽おんやど 富士吟景）",
+          summary: "西湖いやしの里根場體驗古民家與展望；午後回河口湖畔搭纜車與遊船，視體力加碼湖岸取景。",
+          sections: [
+            { title: "景點與亮點", items:["西湖いやしの里根場（合掌屋聚落）","天上山公園 Kachi Kachi 纜車","河口湖遊覽船"]},
+            { title: "餐飲與購物", items:["いやしの里 手作體驗・土產","河口湖站前商店：富士造型甜點／和菓子"]},
+            { title: "小提醒", items:["洞穴區（選配）濕滑，行走放慢","確認末班纜車／遊船時間，避免卡班"]}
+          ]
+        },
+        7: {
+          transport: ["河口湖 → 下吉田 約20分","下午搭『富士回遊』特急返回東京，入住五反田"],
+          meals: {
+            breakfast: "—",
+            lunch: "富士製麵所。",
+            dinner: "鳥貴族或炭火焼肉まるみち。"
+          },
+          lodging: "JR-East Hotel Mets Premier Gotanda（JR東日本ホテルメッツ プレミア 五反田）",
+          summary: "新倉富士淺間神社・忠靈塔→下吉田老街，晚間可前往惠比壽花園廣場或目黑川燈飾。",
+          sections: [
+            { title: "景點與亮點", items:["新倉富士淺間神社・忠靈塔（經典取景）","下吉田本町通（昭和商店街）"]},
+            { title: "餐飲與購物", items:["富士吉田烏龍麵名店巡禮","五反田站周邊超市：Ozeki／成城石井"]},
+            { title: "小提醒", items:["可使用行李宅配（河口湖→東京）","富士回遊需事先劃位，預留進站時間"]}
+          ]
+        },
+        8: {
+          transport: ["五反田 → 押上 約35分（JR/地鐵）","上午登塔，下午購物與水族館"],
+          meals: {
+            breakfast: "—",
+            lunch: "晴空塔（Solamachi 美食街）。",
+            dinner: "晴空塔聖誕市集。"
+          },
+          lodging: "JR-East Hotel Mets Premier Gotanda（JR東日本ホテルメッツ プレミア 五反田）",
+          summary: "晴空塔觀景台、Solamachi、墨田水族館；傍晚看塔燈變化。",
+          sections: [
+            { title: "景點與亮點", items:["東京晴空塔 Tembo Deck／Galleria","Solamachi 購物區（卡通專門店、生活雜貨）","墨田水族館（企鵝池）"]},
+            { title: "餐飲與購物", items:["Solamachi 美食街（和洋多選）","Skytree Town 超市與甜點專櫃"]},
+            { title: "小提醒", items:["可線上預約門票，現場排隊時段較長","觀景台拍照注意玻璃反光（準備偏光鏡）"]}
+          ]
+        },
+        9: {
+          transport: ["山手線+地鐵移動","白天東京車站/丸之內，夜訪六本木"],
+          meals: {
+            breakfast: "—",
+            lunch: "拉麵橫丁。",
+            dinner: "六本木聖誕市集（或：Union Square Tokyo／麻布十番 Kintan）。"
+          },
+          lodging: "JR-East Hotel Mets Premier Gotanda（JR東日本ホテルメッツ プレミア 五反田）",
+          summary: "東京車站紅磚站舍、KITTE 屋上庭園、三菱一號館美術館；晚間六本木 Hills／東京中城燈飾。",
+          sections: [
+            { title: "景點與亮點", items:["東京車站 丸之內口（經典夜拍）","KITTE 屋上庭園（俯瞰車站）","三菱一號館美術館（復古紅磚建築）"]},
+            { title: "夜間燈飾", items:["丸之內仲通り 冬季燈飾","六本木 けやき坂（東京塔對景）","東京中城 Midtown 冬季燈飾"]},
+            { title: "餐飲與購物", items:["Gransta／KITTE／丸之內仲通：甜點名店與品牌店","六本木 Hills／東京中城：設計、時尚選品"]},
+            { title: "小提醒", items:["丸之內步行區平緩，建議步行銜接點位","熱門餐廳建議事先訂位"]}
+          ]
+        },
+        10: {
+          transport: ["五反田 → 澀谷 約10分","晚間轉往羽田機場飯店"],
+          meals: {
+            breakfast: "—",
+            lunch: "宇田川カフェ、Ichiran。",
+            dinner: "澀谷（Excel）；夜間轉往羽田後可補：機場餐廳街。"
+          },
+          lodging: "Hotel Villa Fontaine Grand Haneda Airport（ヴィラフォンテーヌ グランド 羽田空港）",
+          summary: "澀谷 Scramble、PARCO／109／Hikarie、SHIBUYA SKY；代代木公園、明治神宮。夜間亮點：青之洞窟 SHIBUYA。",
+          sections: [
+            { title: "澀谷重點（條列）", items:["宮下公園（MIYASHITA PARK）屋頂步道・市集","澀谷 Scramble 觀景點位與最佳拍攝時間","Center Gai（中心街）與宇田川町商圈","澀谷 PARCO（任天堂／CAPCOM／動漫區）","SHIBUYA SKY（預約登頂日落～夜景）","Hikarie／渋谷ストリーム（餐飲與連接動線）"]},
+            { title: "夜間亮點", items:["青之洞窟 SHIBUYA（點燈步行動線／時間預留）"]},
+            { title: "餐飲與購物", items:["東急Foodshow／B1超市採買","Loft／Tokyu Hands（選品文具）"]},
+            { title: "動線", items:["可選品川轉京急 或 濱松町轉單軌至羽田（行李多推薦計程車）"]},
+            { title: "小提醒", items:["22:00 前整理行李、確認登機資訊","羽田飯店辦理入住後可至展望台夜拍"]}
+          ]
+        },
+        11: {
+          transport: ["步行至第三航廈 約10–15分","JL97 羽田三航 08:40 → 松山一航 11:40"],
+          meals: {
+            breakfast: "咖啡或麵包坊輕食。",
+            lunch: "—",
+            dinner: "—"
+          },
+          lodging: "—",
+          summary: "機場採買：東京香蕉、Royce、限定模型；通關後返台。",
+          sections: [
+            { title: "最後安排", items:["免稅店最後採買：和菓子／巧克力","登機前整理護照、登機證、隨身充電線"]},
+            { title: "小提醒", items:["提前通過安檢，依看板與廣播資訊前往登機口","留意液體容量限制與隨身電池瓦時"]}
+          ]
+        }
+      };
+
+      const POI_LINKS = {
+        // 橫濱・港未來
+        "紅磚倉庫": "https://www.yokohama-akarenga.jp/",
+        "YOKOHAMA MILIGHT": "https://ymm21-illumination.jp/",
+        "ヨコハマミライト": "https://ymm21-illumination.jp/",
+        "MARK IS みなとみらい": "https://www.mec-markis.jp/mm/",
+        "横浜ワールドポーターズ": "https://www.yim.co.jp/",
+        "Queen’s Square": "https://www.qsy-tqc.jp/",
+        "Landmark Plaza": "https://www.yokohama-landmark.jp/",
+        "Cosmo Clock 21": "https://cosmoworld.jp/cosmoclock21/?lang=en",
+        "YOKOHAMA AIR CABIN": "https://yokohama-air-cabin.jp/",
+        "Anniversaire Café": "https://cafe.anniversaire.co.jp/minatomirai/",
+        "Bills": "https://billsjapan.com/",
+        "Bills 橫濱紅磚倉庫": "https://www.billsjapan.com/jp/locations/yokohama-red-brick-warehouse",
+
+        // 鎌倉・江之島（飲食含地點別官網）
+        "鶴岡八幡宮": "https://www.hachimangu.or.jp/",
+        "報國寺": "https://www.houkokuji.or.jp/",
+        "長谷寺": "https://www.hasedera.jp/",
+        "海光庵": "https://www.hasedera.jp/restaurant/",
+        "高德院": "https://www.kotoku-in.jp/",
+        "江之電": "https://www.enoden.co.jp/",
+        "江之島": "https://enoshima-seacandle.com/",
+        "しらす問屋 とびっちょ": "https://tobiccho.com/",
+        "Pacific DRIVE-IN": "https://pacificdrivein.com/",
+        "IWATA 咖啡店": "https://iwatacoffee.sakura.ne.jp/",
+        "Bills 七里濱": "https://www.billsjapan.com/jp/locations/shichirigahama",
+        "珊瑚礁本店": "https://sangosho.net/honten/",
+
+        // 御殿場・時之栖
+        "時之栖": "https://www.tokinosumika.com/",
+        "御殿場 Premium Outlets": "https://www.premiumoutlets.co.jp/gotemba/",
+
+        // 富士五湖・河口湖
+        "音樂盒之森": "https://kawaguchikomusicforest.jp/",
+        "大石公園": "https://www.fujisan.ne.jp/",
+        "西湖いやしの里根場": "https://saikoiyashinosatonenba.jp/",
+        "天上山纜車": "https://www.mtfujiropeway.jp/",
+        "河口湖遊覽船": "https://www.fujigokokisen.jp/",
+        "ほうとう不動": "https://www.houtou-fudou.jp/",
+        "甲州ほうとう 小作": "https://www.kosaku.co.jp/",
+
+        // 東京（晴空塔・丸之內・六本木）
+        "晴空塔": "https://www.tokyo-skytree.jp/",
+        "Solamachi": "https://www.tokyo-solamachi.jp/",
+        "墨田水族館": "https://www.sumida-aquarium.com/",
+        "KITTE": "https://marunouchi.jp-kitte.jp/",
+        "東京ラーメンストリート": "https://www.tokyostationcity.com/ramenstreet/",
+        "東京拉麵橫丁": "https://tokyo-ramenyokocho.com/",
+        "Gransta": "https://www.gransta.jp/",
+        "三菱一號館美術館": "https://mimt.jp/",
+        "六本木Hills": "https://www.roppongihills.com/",
+        "東京中城": "https://www.tokyomidtown.com/jp/",
+        "丸の内イルミネーション": "https://www.marunouchi.com/",
+
+        // 東京（澀谷一帶）
+        "SHIBUYA SKY": "https://www.shibuya-scramble-square.com/sky/",
+        "SHIBUYA SCRAMBLE SQUARE": "https://www.shibuya-scramble-square.com/",
+        "MIYASHITA PARK": "https://www.miyashita-park.tokyo/",
+        "宮下公園": "https://www.miyashita-park.tokyo/",
+        "渋谷ストリーム": "https://shibuyastream.jp/",
+        "SHIBUYA109": "https://www.shibuya109.jp/",
+        "東急Foodshow": "https://www.tokyu-dept.co.jp/shibuya_foodshow/",
+        "Loft": "https://www.loft.co.jp/",
+        "Tokyu Hands": "https://www.hands.co.jp/",
+        "青之洞窟 SHIBUYA": "https://bluecave.jp/",
+
+        // 住宿（官網）
+        "Hotel New Otani Yokohama Premium": "https://www.newotani-inntokyo.jp/",
+        "Kamakura Prince Hotel": "https://www.princehotels.co.jp/kamakura/",
+        "Toyoko Inn Gotemba-eki-mae": "https://www.toyoko-inn.com/eng/search/detail/00182/",
+        "JR-East Hotel Mets Premier Gotanda": "https://www.hotelmets.jp/gotanda/",
+        "ヴィラフォンテーヌ グランド 羽田空港": "https://hvf.jp/haneda/grand/",
+        "Koraku Onyado Fuji Ginkei": "https://www.fujiginkei.jp/",
+        
+        // 其他常見品牌／地點
+        "Union Square Tokyo": "https://unionsquaretokyo.com/en",
+        "KINTAN": "https://kintan.restaurant/",
+        "成城石井": "https://www.seijoishii.co.jp/",
+        "Ozeki": "https://www.ozeki-net.co.jp/"
+      };
+
+      function linkify(txt=''){
+        let out = String(txt ?? '');
+        const entries = Object.entries(POI_LINKS).sort((a,b)=>b[0].length-a[0].length);
+        const placeholders = [];
+        entries.forEach(([k,url], idx)=>{
+          if(!k) return; const ph = `__POI_${idx}__`;
+          if (out.indexOf(k) !== -1) { out = out.split(k).join(ph); placeholders[idx] = `<a href="${url}" target="_blank" rel="noopener" class="underline decoration-dotted">${k}</a>`; }
+          else { placeholders[idx] = null; }
+        });
+        placeholders.forEach((html, idx)=>{ if(html) out = out.split(`__POI_${idx}__`).join(html); });
+        return out;
+      }
+      const ul = items => `<ul class="list-disc pl-5 space-y-1">${(items||[]).map(i=>`<li>${linkify(i)}</li>`).join('')}</ul>`;
+
+      const mealsBlock = m => `
+        <div class="rounded-xl border p-3 text-sm bg-white">
+          <div class="flex items-center gap-2 mb-2">🍽️ 三餐</div>
+          <ul class="space-y-1">
+            <li>早餐：${linkify(((m && m.breakfast) || '—'))}</li>
+            <li>午餐：${linkify(((m && m.lunch) || '—'))}</li>
+            <li>晚餐：${linkify(((m && m.dinner) || '—'))}</li>
+          </ul>
+        </div>`;
+
+      const lodgingBlock = txt => `
+        <div class="rounded-xl border p-3 text-sm bg-white">
+          <div class="flex items-center gap-2 mb-2">🛏️ 住宿</div>
+          <div>${linkify(txt || '')}</div>
+        </div>`;
+
+      const galleryHTML = (day, urls=[]) => `
+        <div class="gallery-grid mt-2" data-day="${day}">
+          ${urls.map(u=>`<div class="gallery-item aspect-fixed"><img src="${u}" alt="d${day}" class="w-full h-full object-cover cursor-zoom-in" loading="lazy" decoding="async" referrerpolicy="no-referrer" crossorigin="anonymous"></div>`).join('')}
+        </div>`;
+
+      const cardHTML = (d, det) => `
+        <div id="day-${d.day}" class="shadow-sm rounded-xl border bg-white scroll-mt-24">
+          <div class="p-4 border-b">
+            <div class="flex items-baseline justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center justify-center rounded-full bg-black text-white px-3 py-1 text-base md:text-lg font-semibold">第 ${d.day} 天</span>
+                <span class="text-lg md:text-2xl font-semibold tracking-tight">${d.date}</span>
+              </div>
+            </div>
+            <div class="text-xl md:text-2xl mt-2 font-semibold">${linkify(d.title)}</div>
+          </div>
+          ${(det.summary ? `<div class=\"px-4 pt-2 text-gray-700 text-sm md:text-base\">${linkify(det.summary)}</div>` : '')}
+          ${galleryHTML(d.day, d.gallery)}
+          <div class="rounded-xl border p-3 text-sm bg-white mt-2">
+            <div class="flex items-center gap-2 mb-2">🚆 交通動線</div>
+            ${ul(det.transport || [])}
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+            ${mealsBlock(det.meals || {})}
+            ${lodgingBlock(det.lodging || '')}
+          </div>
+          <details class="border rounded-xl mt-2 mb-6 group">
+            <summary class="w-full flex items-center justify-between px-3 py-2 text-sm cursor-pointer list-none">
+              <span class="flex items-center gap-2"><span class="chev transition-transform group-open:rotate-180">▾</span> 展開行程內容</span>
+            </summary>
+            <div class="px-4 pb-3 text-sm text-gray-600 space-y-4">
+              ${(det.sections||[]).map(sec=>`
+                <div>
+                  <div class="font-medium text-gray-800 mb-1">${sec.title}</div>
+                  ${ul(sec.items||[])}
+                </div>
+              `).join('')}
+            </div>
+          </details>
+        </div>`;
+
+      function renderItinerary(){
+        const wrap = document.getElementById('itineraryList');
+        wrap.innerHTML = DATA.itinerary.map(d => cardHTML(d, DETAILS[d.day]||{})).join('');
+      }
+
+      function bindModeToggle(){
+        const btn = document.getElementById('modeToggle'); if(!btn) return;
+        const sync = () => btn.textContent = document.body.classList.contains('mode-natural') ? '顯示模式：原比例' : '顯示模式：一致尺寸';
+        btn.addEventListener('click', ()=>{ document.body.classList.toggle('mode-natural'); sync(); });
+        sync();
+      }
+
+      function bindLightbox(){
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightboxImg');
+        const lbClose = document.getElementById('lightboxClose');
+        const btnPrev = document.getElementById('lightboxPrev');
+        const btnNext = document.getElementById('lightboxNext');
+        const counter = document.getElementById('lightboxCounter');
+        if(!lb || !lbImg) return;
+
+        let currentList = [];
+        let currentIndex = 0;
+
+        const getFullSrc = (imgEl)=> imgEl.getAttribute('data-fullsrc') || imgEl.src;
+        const updateCounter = ()=>{ if(counter){ counter.textContent = (currentList.length ? `${currentIndex+1} / ${currentList.length}` : ''); } };
+
+        function showAt(idx){
+          if(!currentList.length) return;
+          currentIndex = (idx + currentList.length) % currentList.length;
+          lbImg.src = currentList[currentIndex];
+          const pre1 = new Image(); pre1.src = currentList[(currentIndex+1)%currentList.length];
+          const pre2 = new Image(); pre2.src = currentList[(currentIndex-1+currentList.length)%currentList.length];
+          updateCounter();
+        }
+        function openFrom(img){
+          const grid = img.closest('.gallery-grid');
+          const imgs = grid ? Array.from(grid.querySelectorAll('img')) : [img];
+          currentList = imgs.map(getFullSrc);
+          currentIndex = Math.max(0, imgs.indexOf(img));
+          showAt(currentIndex);
+          if(typeof lb.showModal === 'function') lb.showModal();
+        }
+
+        document.querySelectorAll('.gallery-grid img').forEach(img => {
+          img.addEventListener('click', () => openFrom(img), {passive:true});
+        });
+
+        btnPrev && btnPrev.addEventListener('click', ()=> showAt(currentIndex-1));
+        btnNext && btnNext.addEventListener('click', ()=> showAt(currentIndex+1));
+
+        window.addEventListener('keydown', (e)=>{
+          if(!lb.open) return;
+          if(e.key==='Escape') lb.close();
+          else if(e.key==='ArrowLeft') showAt(currentIndex-1);
+          else if(e.key==='ArrowRight') showAt(currentIndex+1);
+        });
+
+        lb.addEventListener('click', (e)=>{ if(e.target===lb) lb.close(); });
+        lbClose && lbClose.addEventListener('click', ()=> lb.close());
+
+        let touchX = null;
+        lbImg.addEventListener('touchstart', (e)=>{ touchX = e.touches[0].clientX; }, {passive:true});
+        lbImg.addEventListener('touchend', (e)=>{
+          if(touchX===null) return; const dx = (e.changedTouches[0].clientX - touchX);
+          if(Math.abs(dx) > 40){ dx < 0 ? showAt(currentIndex+1) : showAt(currentIndex-1); }
+          touchX = null;
+        }, {passive:true});
+      }
+
+      function proxyURL(u, opts={}){
+        try{
+          const x = new URL(u);
+          const params = new URLSearchParams();
+          const w = opts.w || 1280; params.set('url', x.host + x.pathname + (x.search||'')); params.set('w', w); params.set('output', 'webp');
+          return 'https://images.weserv.nl/?' + params.toString();
+        }catch(e){ return u; }
+      }
+      function bindImgFallback(){
+        const attach = (img)=>{
+          const toProxy = () => { if(img.dataset.fallback) return; img.dataset.fallback = '1'; img.src = proxyURL(img.src); };
+          img.addEventListener('error', toProxy, {passive:true});
+          let timer = null;
+          const onEnter = (entries)=>{ entries.forEach(en=>{ if(en.isIntersecting){ if(img.complete) return; if(timer) return; timer = setTimeout(()=>{ if(!img.complete) toProxy(); }, 2500); } }); };
+          const io = new IntersectionObserver(onEnter, {rootMargin: '200px'}); io.observe(img);
+          img.addEventListener('load', ()=>{ if(timer){ clearTimeout(timer); timer=null; } }, {passive:true});
+        };
+        document.querySelectorAll('img').forEach(attach);
+        const obs = new MutationObserver((muts)=>{ muts.forEach(m=>{ m.addedNodes && m.addedNodes.forEach(node=>{ if(node.nodeType===1){ if(node.tagName==='IMG') attach(node); node.querySelectorAll && node.querySelectorAll('img').forEach(attach); } }); }); });
+        obs.observe(document.body, {childList:true, subtree:true});
+      }
+
+      document.getElementById('dljson').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify({DATA, DETAILS}, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'tokyo-yokohama-kawaguchiko.json'; a.click(); URL.revokeObjectURL(url);
+      });
+
+      function runSelfTests(){
+        try {
+          console.assert(Array.isArray(DATA.itinerary), 'itinerary should be an array');
+          console.assert(DATA.itinerary.length === 11, 'itinerary should have 11 days');
+          const days = DATA.itinerary.map(d=>d.day);
+          console.assert(days.join(',') === '1,2,3,4,5,6,7,8,9,10,11', 'days should be 1..11');
+          console.assert(DATA.itinerary.every(d=>Array.isArray(d.gallery)), 'each day.gallery should be an array');
+          console.assert(DATA.flights.outbound.depTime && DATA.flights.inbound.arrTime, 'flight times should be set');
+          setTimeout(()=>{
+            const wrap = document.getElementById('itineraryList');
+            console.assert(wrap && wrap.children.length === 11, 'should render 11 day cards');
+          }, 0);
+
+          setTimeout(()=>{
+            const firstImg = document.querySelector('.gallery-grid img');
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            if(firstImg && lb && lbImg && typeof lb.showModal === 'function'){
+              const grid = firstImg.closest('.gallery-grid');
+              const imgs = grid ? Array.from(grid.querySelectorAll('img')) : [];
+              firstImg.click();
+              console.assert(lb.open === true, 'lightbox should be open after click');
+              const before = lbImg.src;
+              const ev = new KeyboardEvent('keydown', {key:'ArrowRight'});
+              window.dispatchEvent(ev);
+              if(imgs.length > 1){
+                console.assert(lbImg.src !== before, 'lightbox image should change on ArrowRight');
+              }
+              lb.close();
+            }
+          }, 80);
+
+          setTimeout(()=>{
+            const btn = document.getElementById('modeToggle');
+            if(btn){
+              const wasNatural = document.body.classList.contains('mode-natural');
+              btn.click();
+              console.assert(document.body.classList.contains('mode-natural') !== wasNatural, 'modeToggle should toggle class');
+              btn.click();
+            }
+          }, 60);
+        } catch(e){
+          console.error('Self-tests failed:', e);
+        }
+      }
+
+      renderItinerary();
+      bindModeToggle();
+      bindLightbox();
+      bindImgFallback();
+      runSelfTests();
+    </script>
+  </body>
+</html>
