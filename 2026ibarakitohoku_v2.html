@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>茨城・東北・羽田 9日春櫻粉蝶花之行 — 初版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Noto+Serif+TC:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+      summary::-webkit-details-marker { display: none; }
+      body { font-family: 'Noto Sans TC', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans CJK TC', sans-serif; }
+      .title-font { font-family: 'Noto Serif TC', ui-serif, Georgia, serif; letter-spacing: .2px; }
+      .gallery-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .5rem; }
+      @media (min-width: 768px) { .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); } }
+      .gallery-item { overflow:hidden; border-radius: .5rem; border:1px solid rgb(229 231 235); background:#fff; }
+      .aspect-fixed { aspect-ratio: 4/3; }
+      .gallery-item img { width:100%; height:100%; object-fit: cover; display:block; }
+      .mode-natural .gallery-item { aspect-ratio: auto; }
+      .mode-natural .gallery-item img { height:auto; object-fit: contain; background:#000; }
+      dialog#lightbox { width: min(96vw, 1200px); border: none; padding: 0; background: transparent; }
+      dialog#lightbox::backdrop { background: rgba(0,0,0,.7); }
+      .lightbox-inner { position: relative; padding: .5rem; background: #000; border-radius: .75rem; }
+      .lightbox-img { max-width: 92vw; max-height: 86vh; display: block; margin: auto; }
+      .lightbox-close { position:absolute; top:.5rem; right:.5rem; background: rgba(255,255,255,.9); border: 1px solid rgb(229 231 235); padding: .25rem .5rem; border-radius: .5rem; font-size: .875rem; }
+      .lightbox-nav { position:absolute; top:50%; transform: translateY(-50%); background: rgba(255,255,255,.85); border:1px solid rgb(229 231 235); padding:.35rem .6rem; border-radius:.5rem; font-size:1rem; user-select:none; }
+      .lightbox-prev { left:.5rem; }
+      .lightbox-next { right:.5rem; }
+      .lightbox-counter { position:absolute; bottom:.5rem; right:.5rem; background: rgba(0,0,0,.6); color:#fff; font-size:.75rem; padding:.2rem .5rem; border-radius:.375rem; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-neutral-50 body-font">
+    <div class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/80 border-b">
+      <div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-5 h-5 rounded bg-black"></span>
+          <h1 class="text-xl sm:text-2xl font-semibold tracking-tight title-font">茨城・東北・羽田 9日春櫻粉蝶花之行</h1>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <button id="modeToggle" class="border rounded-md px-3 py-1.5 text-xs">顯示模式：一致尺寸</button>
+          <button id="dljson" class="bg-black text-white rounded-md px-3 py-1.5 text-xs">匯出 JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="mx-auto max-w-6xl px-4 pb-16 pt-6">
+      <section class="mb-6">
+        <div class="relative overflow-hidden rounded-2xl border shadow-sm">
+          <img src="https://www.hitachikaihin.jp/data/img/1753230257_4.jpg" alt="Hero" class="w-full h-64 object-cover" fetchpriority="high" referrerpolicy="no-referrer" crossorigin="anonymous">
+        </div>
+      </section>
+
+      <div class="my-6 border-t"></div>
+
+      <section class="mb-8" id="flights">
+        <div class="flex items-center gap-2 py-2">
+          <span class="text-xl">✈️</span>
+          <h2 class="text-2xl font-semibold tracking-tight title-font">航班</h2>
+        </div>
+        <div class="shadow-sm rounded-xl border bg-white scroll-mt-24">
+          <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-xl border p-4">
+              <div class="flex items-center gap-2 mb-2"><span class="inline-flex items-center justify-center rounded-full bg-gray-100 border px-2 py-0.5 text-xs">去程</span></div>
+              <div class="text-base text-gray-700 font-medium">日本航空 JAL</div>
+              <div class="flex items-center gap-2 mt-1 text-sm"><span class="inline-flex items-center rounded-full bg-gray-100 border px-2 py-0.5">JL96</span><span>2026/4/17（五）</span></div>
+              <div class="grid grid-cols-2 gap-2 items-center mt-2 text-base">
+                <div class="flex items-center gap-2 text-lg font-semibold">09:40</div><div class="text-right text-gray-500">台北松山機場 第一航廈 (TSA T1)</div>
+                <div class="flex items-center gap-2 text-lg font-semibold">13:50</div><div class="text-right text-gray-500">羽田機場 第三航廈 (HND T3)</div>
+              </div>
+            </div>
+            <div class="rounded-xl border p-4">
+              <div class="flex items-center gap-2 mb-2"><span class="inline-flex items-center justify-center rounded-full bg-gray-100 border px-2 py-0.5 text-xs">回程</span></div>
+              <div class="text-base text-gray-700 font-medium">日本航空 JAL</div>
+              <div class="flex items-center gap-2 mt-1 text-sm"><span class="inline-flex items-center rounded-full bg-gray-100 border px-2 py-0.5">JL97</span><span>2026/4/25（六）</span></div>
+              <div class="grid grid-cols-2 gap-2 items-center mt-2 text-base">
+                <div class="flex items-center gap-2 text-lg font-semibold">08:55</div>
+                <div class="text-right text-gray-500">羽田機場 第三航廈 (HND T3)</div>
+                <div class="flex items-center gap-2 text-lg font-semibold">11:15</div>
+                <div class="text-right text-gray-500">台北松山機場 第一航廈 (TSA T1)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-8" id="itinerary">
+        <div class="flex items-center gap-2 py-2">
+          <span class="text-xl">🗓️</span>
+          <h2 class="text-2xl font-semibold tracking-tight title-font">每日行程</h2>
+        </div>
+        <div id="itineraryList" class="space-y-6"></div>
+      </section>
+
+      <dialog id="lightbox">
+        <div class="lightbox-inner">
+          <button id="lightboxPrev" class="lightbox-nav lightbox-prev" aria-label="上一張">‹</button>
+          <img id="lightboxImg" class="lightbox-img" alt="preview">
+          <button id="lightboxNext" class="lightbox-nav lightbox-next" aria-label="下一張">›</button>
+          <div id="lightboxCounter" class="lightbox-counter" aria-live="polite"></div>
+          <button id="lightboxClose" class="lightbox-close">關閉 ✕</button>
+        </div>
+      </dialog>
+    </main>
+
+    <script>
+      const DATA = {
+        title: "茨城・東北・羽田 9日春櫻粉蝶花之行",
+        subtitle: "沿用東京版原始骨架，替換為東北 9 日內容",
+        hero: { image: "https://www.hitachikaihin.jp/data/img/1753230257_4.jpg", caption: "示意圖，可替換" },
+        flights: {
+          outbound: { airline: "日本航空 JAL", number: "JL96", date: "2026/4/17（五）", depTime: "09:40", dep: "台北松山 第一航廈 TSA", arrTime: "13:50", arr: "羽田 第三航廈 HND" },
+          inbound:  { airline: "日本航空 JAL", number: "JL97", date: "2026/4/25（六）", depTime: "08:55", dep: "羽田 第三航廈 HND", arrTime: "11:15", arr: "台北松山 第一航廈 TSA" }
+        },
+        itinerary: [
+          { day:1, date:"2026/4/17（五）", title:"抵達東京，前進茨城水戶", gallery:[
+            "https://i0.wp.com/roundtripjp.com/wp-content/uploads/2023/08/P1200046.jpg",
+            "https://mitokoumon.com/content/images/2021/03/otemon7.jpg",
+            "https://mitokoumon.com/content/images/2021/02/senbako_m.jpg",
+            "https://mitokoumon.com/content/images/2021/03/sumiyagura.jpg"
+          ] },
+          { day:2, date:"2026/4/18（六）", title:"夢幻粉蝶花整日遊", gallery:[
+            "https://www.hitachikaihin.jp/data/img/1753230292_4.jpg",
+            "https://www.hitachikaihin.jp/data/img/1753230325_4.jpg",
+            "https://www.hitachikaihin.jp/data/img/1753230436_4.jpg",
+            "https://www.hitachikaihin.jp/data/park_spot/1755161579_4.jpg"
+          ] },
+          { day:3, date:"2026/4/19（日）", title:"名園禪意與大洗海上奇景", gallery:[
+            "https://www.oarai-info.jp/wp/wp-content/uploads/2024/02/%E7%A5%9E%E7%A3%AF%E3%81%AE%E9%B3%A5%E5%B1%85-2.jpg",
+            "https://ibaraki-kairakuen.jp/kairakuen/img/map01.jpg",
+            "https://ibaraki-kairakuen.jp/kairakuen/img/map02.jpg",
+            "https://static.gltjp.com/glt/data/directory/17000/16114/20240811_061157_7707a078_w1920.webp"
+          ] },
+          { day:4, date:"2026/4/20（一）", title:"北上仙台，沉浸日本三景松島", gallery:[
+            "https://tw.wamazing.com/media/wp-content/uploads/sites/4/2026/01/pixta_83213450_M.jpg.webp",
+            "https://www.bubu-jp.com/wp-content/uploads/2024/03/pixta_83867660_M.jpg",
+            "https://www.bubu-jp.com/wp-content/uploads/2024/03/pixta_57005401_M.jpg",
+            "https://zuiganji.or.jp/guide/img/keidai_01_main.jpg"
+          ] },
+          { day:5, date:"2026/4/21（二）", title:"岩手盛岡櫻花巡禮（放射狀往返）", gallery:[
+            "https://www.city.morioka.iwate.jp/_res/projects/default_project/_page_/001/047/605/ishiwari412.JPG",
+            "https://www.city.morioka.iwate.jp/_res/projects/default_project/_page_/001/039/757/zoyuatokouen4.18.png",
+            "https://www.city.morioka.iwate.jp/_res/projects/default_project/_page_/001/039/757/takamatunoike4.18.PNG",
+            "https://www.city.morioka.iwate.jp/_res/projects/default_project/_page_/001/010/491/sakurabayasi2.JPG"
+          ] },
+          { day:6, date:"2026/4/22（三）", title:"弘前櫻花百選盛宴（放射狀往返）", gallery:[
+            "https://www.city.hirosaki.aomori.jp/city_promotion/photo/folder16/DSC_1057.jpg",
+            "https://www.city.hirosaki.aomori.jp/city_promotion/photo/folder16/4%2C21DSC_2592.jpg",
+            "https://www.city.hirosaki.aomori.jp/city_promotion/photo/folder16/123DSC0059.jpg",
+            "https://d1grca2t3zpuug.cloudfront.net/2026/01/3895688_m-1200x800-1767777506.webp"
+          ] },
+          { day:7, date:"2026/4/23（四）", title:"十和田藝術與櫻之街道（放射狀往返）", gallery:[
+            "https://static.gltjp.com/glt/data/directory/13000/12554/20230101_213949_ede317ca_w1920.webp",
+            "https://towadaartcenter.com/wordpress/wp-content/uploads/2021/05/202105web_love-forever-singing-in-towada.jpg",
+            "https://www.city.towada.lg.jp/kanko/spot/images/_N9A1573_2.jpg",
+            "https://towadaartcenter.com/wordpress/wp-content/uploads/2016/08/mueck-standing-woman-510x800.jpg"
+          ] },
+          { day:8, date:"2026/4/24（五）", title:"仙台購物最後衝刺，晚間進駐羽田", gallery:[
+            "https://d2dv4ofzvymp2a.cloudfront.net/2017/11/1station2.jpg",
+            "https://d1grca2t3zpuug.cloudfront.net/2025/12/sendaiparco_g-1477x1108-1766686871.webp",
+            "https://img.bigfang.tw/2024/05/1716791997-4efdd2f969559e8b1c92e99f32ded48e.jpg",
+            "https://www.bring-you.info/imgs/2023/08/sendai-commercial-street-1.jpg"
+          ] },
+          { day:9, date:"2026/4/25（六）", title:"羽田 → 松山｜返台日", gallery:[
+            "https://tokyo-haneda.com/site_resource/enjoy/img/enjoy__img_recommended_deck_t3_01.jpg",
+            "https://tokyo-haneda.com/site_resource/enjoy/img/enjoy__img_recommended_deck_t1_04.jpg"
+          ] }
+        ]
+      };
+
+      const DETAILS = {
+        1: {
+          transport: [
+            "JL96 松山一航 09:40 → 羽田三航 13:50",
+            "羽田空港第 3 航廈 2 樓 JR EAST Travel Service Center 處理後續票券與指定席",
+            "建議走京急電鐵（羽田 → 品川）→ JR 特急ひたち／ときわ（品川 → 水戶）",
+            "品川到水戶搭乘 JR 特急約 85 分鐘，傍晚前進水戶站周邊"
+          ],
+          meals: {
+            breakfast: "—",
+            lunch: "羽田機場 4 樓「江戶小路」快速解決。",
+            dinner: "水戶站周邊常陸牛晚餐。"
+          },
+          lodging: "ホテルテラスザガーデン水戸",
+          summary: "抵達日本後前往水戶，完成票券與指定席處理，傍晚以水戶站周邊散策與常陸牛揭開旅程序幕。",
+          sections: [
+            { title: "景點與亮點", items:["傍晚可於水戶市區散策","若體力許可，可步行至南口的櫻川河畔欣賞殘櫻或新綠景色","常陸牛作為第一天亮點晚餐"]},
+            { title: "餐飲與購物", items:["晚餐以水戶車站周邊或站內餐廳為優先","可鎖定水戶站 Excel 百貨與地下街採買伴手禮","梅干、梅酒、納豆加工點心是代表性土產"]},
+            { title: "小提醒", items:["舊版 JR EAST PASS（Tohoku area）5 日券規劃 Day 4 ～ Day 8 啟用","建議 Day 1 就在羽田完成 Day 4 ～ Day 8 的重要指定席劃位","第一晚以穩定銜接與早點休息為主"]}
+          ]
+        },
+        2: {
+          transport: ["水戶 → 勝田 約 6 分鐘（JR 常磐線）","勝田站轉乘巴士或計程車前往國營常陸海濱公園 約 15 分鐘","園內以步行方式集中遊覽見晴之丘與周邊重點區域"],
+          meals: {
+            breakfast: "SAZA咖啡（將軍咖啡），或水戶站內 NewDays 飯糰。",
+            lunch: "園內期間限定餐車美食。",
+            dinner: "水戶納豆與鮟鱇魚料理。"
+          },
+          lodging: "ホテルテラスザガーデン水戸",
+          summary: "專注在見晴之丘與粉蝶花海慢慢走、慢慢拍，午後在 Sea Side Cafe 收束。",
+          sections: [
+            { title: "景點與亮點", items:["國營常陸海濱公園（Hitachi Seaside Park）","步行前往見晴之丘欣賞粉藍色花海","下午茶可前往 Sea Side Cafe（Glass House）享受海景與花海餘韻"]},
+            { title: "餐飲與購物", items:["午餐可吃粉蝶花藍色霜淇淋、常陸牛漢堡或烤火腿串","晚餐回水戶可安排山翠（Sansui）等餐廳","若園內有限定季節商品可於離園前採買"]},
+            { title: "小提醒", items:["這天步行量較大，建議集中於核心區域","勝田站到公園不是 JR 路段，巴士／計程車費另計","粉蝶花區人潮通常較多，拍照可避開最尖峰時段"]}
+          ]
+        },
+        3: {
+          transport: ["水戶 → 大洗 約 15 分鐘（鹿島臨海鐵道 大洗鹿島線）","大洗站轉在地巴士前往神磯鳥居／大洗磯前神社一帶 約 15 分鐘","中午後原路回水戶，下午再往偕樂園與千波湖"],
+          meals: {
+            breakfast: "飯店內享用慢節奏早餐。",
+            lunch: "大洗魚市場海鮮。",
+            dinner: "返回水戶後享用站前拉麵或居酒屋料理。"
+          },
+          lodging: "ホテルテラスザガーデン水戸",
+          summary: "上午看神磯鳥居與海岸風景，午後回到水戶，接續偕樂園與千波湖的悠閒散步節奏。",
+          sections: [
+            { title: "景點與亮點", items:["大洗磯前神社與神磯鳥居","午後安排偕樂園與千波湖散步","好文亭與竹林在春季新綠時節仍然清幽"]},
+            { title: "餐飲與購物", items:["大洗可吃現烤生蠔、海鮮丼、吻仔魚料理","若時間充裕可於大洗補些海產伴手禮","晚餐回到水戶後依體力選拉麵、居酒屋或定食"]},
+            { title: "小提醒", items:["這天含 JR 以外的地方鐵道與巴士移動","神磯鳥居臨海風勢通常較強，建議備防風外套","鞋子以好走、防滑為優先"]}
+          ]
+        },
+        4: {
+          transport: ["Day 4 起正式啟用舊版 JR EAST PASS（Tohoku area）5 日券","水戶 → 仙台：JR 特急「常陸號」約 2.5 小時","仙台 → 松島海岸：JR 仙石線，再步行展開松島巡禮"],
+          meals: {
+            breakfast: "—",
+            lunch: "松島鮮蠔或當地餐食。",
+            dinner: "返回仙台後享用仙台牛舌定食。"
+          },
+          lodging: "ホテルメトロポリタン 仙台",
+          summary: "從水戶北上仙台，下午安排松島海岸、遊船與歷史寺社，晚上回到仙台站周邊休息。",
+          sections: [
+            { title: "景點與亮點", items:["松島灣遊船","瑞巖寺與五大堂","這天是從茨城切換到東北主舞台的重要一天"]},
+            { title: "餐飲與購物", items:["午餐以松島當地餐廳為主，建議安排鮮蠔或海鮮料理","晚餐回仙台後可安排司（Tsukasa）或善治郎（Zenjirou）牛舌","可順便熟悉仙台站周邊動線與商場"]},
+            { title: "小提醒", items:["上午若移動順利，松島行程會更從容","這天開始連續幾日以新幹線／JR 放射狀旅行為主"]}
+          ]
+        },
+        5: {
+          transport: ["仙台 → 盛岡（東北新幹線）","盛岡市區可利用『盛岡都心循環巴士（でんでんむし）』串接主要景點","盛岡到站後可搭配步行與循環巴士串接石割櫻、盛岡城跡公園與高松公園","傍晚搭東北新幹線返回仙台"],
+          meals: {
+            breakfast: "—",
+            lunch: "盛岡三大麵系列。",
+            dinner: "盛岡晚餐（可選盛樓閣或類似燒肉／冷麵名店），用餐後再返回仙台。"
+          },
+          lodging: "ホテルメトロポリタン 仙台",
+          summary: "以盛岡石割櫻、盛岡城跡公園與高松公園為核心的賞櫻放射日。",
+          sections: [
+            { title: "景點與亮點", items:["石割櫻從巨岩縫隙中綻放，是東北代表性的生命力象徵","盛岡城跡公園有高聳石牆與櫻花交織的經典畫面","高松公園繞湖景致宜人"]},
+            { title: "餐飲與購物", items:["午餐可吃盛岡冷麵或其他三大麵名店","晚餐建議安排盛樓閣等在地人氣店，體驗盛岡燒肉＋冷麵","餐後可於盛岡站周邊簡單逛街再搭車返回仙台"]},
+            { title: "小提醒", items:["這天屬於輕新幹線放射日，行程強度適中","若三個景點需要取捨，石割櫻與盛岡城跡公園優先"]}
+          ]
+        },
+        6: {
+          transport: ["仙台 → 新青森（東北新幹線）→ 弘前（JR 奧羽本線）","弘前站到公園可步行約 30 分鐘、巴士約 10 - 20 分鐘或計程車約 7 分鐘","夜櫻後依原路返回仙台"],
+          meals: {
+            breakfast: "—",
+            lunch: "弘前蘋果派。",
+            dinner: "弘前公園屋台美食。"
+          },
+          lodging: "ホテルメトロポリタン 仙台",
+          summary: "本趟最長也最華麗的一天，白天賞花、黃昏轉夜櫻，核心是弘前公園整日停留。",
+          sections: [
+            { title: "景點與亮點", items:["弘前公園整日遊","護城河花筏、櫻花隧道、古城與櫻花同框","夜間點燈被公認為日本代表級夜櫻景色"]},
+            { title: "餐飲與購物", items:["弘前為蘋果之鄉，可利用蘋果派地圖攻略甜點店","晚餐可直接在公園屋台解決","返程前可採買蘋果系甜點或伴手禮"]},
+            { title: "小提醒", items:["這是全程路途最長也最重要的一天，建議前一晚早點休息","弘前站到公園本身還有一段轉移，時間不要抓太緊","返程需預留夜櫻後移動與轉乘緩衝"]}
+          ]
+        },
+        7: {
+          transport: ["仙台 → 七戶十和田（Hayabusa 約 1.5 小時）","七戶十和田站南口轉乘十和田觀光電鐵巴士 約 35 分鐘直達美術館前","下午原路返回仙台"],
+          meals: {
+            breakfast: "—",
+            lunch: "十和田五花肉燒（Towada Barayaki）。",
+            dinner: "返回仙台後享用牛舌或市區餐食。"
+          },
+          lodging: "ホテルメトロポリタン 仙台",
+          summary: "十和田市現代美術館與官廳街通櫻花並排成一天的雙主角。",
+          sections: [
+            { title: "景點與亮點", items:["十和田市現代美術館以大型當代藝術作品聞名","官廳街通櫻花與松樹並列，是兼具藝術感與城市感的櫻花街道","與前一天弘前相比，屬於不同氣質的城市型櫻花＋美術館組合"]},
+            { title: "餐飲與購物", items:["午餐重點就是十和田名物 Barayaki","若美術館周邊有喜歡的設計選物或藝術小物，可作為紀念品","晚餐回仙台後再安排國分町或車站周邊餐廳"]},
+            { title: "小提醒", items:["七戶十和田站巴士班次較少，最重要的是巴士與新幹線銜接","若體力累積明顯，這天可保留更多彈性"]}
+          ]
+        },
+        8: {
+          transport: ["上午至下午以仙台車站周邊購物為主","仙台 → 東京（東北新幹線）約 1.5 小時","東京 → 濱松町 → 東京單軌電車 → 羽田空港第 3 航廈"],
+          meals: {
+            breakfast: "—",
+            lunch: "仙台站內牛舌街（Gyutan Dori）。",
+            dinner: "羽田花園（Haneda Airport Garden）。"
+          },
+          lodging: "Villa Fontaine Grand Haneda Airport",
+          summary: "上午到下午留給仙台站周邊購物與補貨，傍晚移動至東京與羽田，並以機場溫泉和觀景台作為收尾。",
+          sections: [
+            { title: "景點與亮點", items:["仙台站周邊最後購物與整理","晚上入住羽田後可至觀景台散步或享受機場溫泉","這天是追櫻旅程轉為收尾模式的一天"]},
+            { title: "餐飲與購物", items:["S-PAL 仙台、AER、Parco、Clis Road 商店街","羽田機場第 3 航廈 4 樓江戶小路與羽田花園購物城可做最後補貨","適合集中處理伴手禮與藥妝採買"]},
+            { title: "小提醒", items:["Day 8 為 JR PASS 最後一天","保留足夠時間完成仙台 → 東京 → 羽田整段銜接","抵達羽田後建議先整理行李，再輕鬆泡湯與散步"]}
+          ]
+        },
+        9: {
+          transport: ["飯店早餐與退房","步行 5 - 10 分鐘前往羽田機場報到櫃台","JL97 羽田三航 08:55 → 松山一航 11:15"],
+          meals: {
+            breakfast: "飯店早餐。",
+            lunch: "—",
+            dinner: "—"
+          },
+          lodging: "—",
+          summary: "住宿在機場旁，保有難得的從容晨間節奏，早餐後步行前往航廈辦理報到，安穩返台。",
+          sections: [
+            { title: "最後安排", items:["完成安檢後，可在 TIAT 免稅店補足最後少量伴手禮或飲品","整理護照、登機證、退稅品與隨身充電線"]},
+            { title: "小提醒", items:["提前通過安檢，依看板與廣播資訊前往登機口","留意液體容量限制與隨身電池瓦時","這天不再安排額外行程，讓整段旅程乾淨收尾"]}
+          ]
+        }
+      };
+
+      const POI_LINKS = {
+        "SAZA咖啡": "https://www.saza.co.jp/", 
+        "JR EAST Travel Service Center": "https://www.jreast.co.jp/en/multi/customer_support/service_center_haneda.html",
+        "JR EAST PASS（Tohoku area）": "https://www.jreast.co.jp/en/multi/pass/eastpass_t.html",
+        "NewDays": "https://retail.jr-cross.co.jp/newdays/",
+
+        "ホテルテラスザガーデン水戸": "https://www.hotel-terrace.com/",
+        "ホテルメトロポリタン 仙台": "https://sendai.metropolitan.jp/",
+        "Villa Fontaine Grand Haneda Airport": "https://www.hvf.jp/hanedaairport-grand/",
+
+        "國營常陸海濱公園": "https://www.hitachikaihin.jp/",
+        "Hitachi Seaside Park": "https://www.hitachikaihin.jp/",
+        "見晴之丘": "https://www.hitachikaihin.jp/park_spot.php?code=4&mode=detail",
+        "Sea Side Cafe": "https://www.hitachikaihin.jp/gourmet/",
+        "Glass House": "https://www.hitachikaihin.jp/gourmet/",
+        "常陸牛": "https://visit.ibarakiguide.jp/zh-hant/column/34578/",
+
+        "偕樂園": "https://ibaraki-kairakuen.jp/tw/",
+        "好文亭": "https://ibaraki-kairakuen.jp/kobuntei/",        "水戶站 Excel 百貨": "https://www.excel-mito.com/",
+        "Excel 百貨": "https://www.excel-mito.com/",
+        "山翠": "https://www.sansui-mito.com/",
+
+        "大洗磯前神社": "https://www.oarai-isosakijinja.net/",
+        "神磯鳥居": "https://www.oarai-isosakijinja.net/keidai/kamiiso/",
+        "神磯の鳥居": "https://www.oarai-info.jp/spot/postid_2916/",
+        "かあちゃんの店": "https://www.jf-oarai.com/mother",
+
+        "松島灣遊船": "https://www.matsushima.or.jp/",
+        "瑞巖寺": "https://www.zuiganji.or.jp/",
+        "五大堂": "https://www.matsushima-kanko.com/miru/detail.php?id=141",
+
+        "司（Tsukasa）": "https://www.gyutan-tsukasa.co.jp/",
+        "善治郎（Zenjirou）": "https://www.tanya-zenjirou.jp/",
+        "司": "https://www.gyutan-tsukasa.co.jp/",
+        "善治郎": "https://www.tanya-zenjirou.jp/",
+        "牛舌街": "https://www.sendai-info.jp/gourmet/gourmet-8/",
+        "Gyutan Dori": "https://www.sendai-info.jp/gourmet/gourmet-8/",
+
+        "石割櫻": "https://www.city.morioka.iwate.jp/kankou/kankou/1037103/1037212/index.html",
+        "盛岡城跡公園": "https://www.city.morioka.iwate.jp/kankou/kankou/1037103/1037212/sakura/1007958.html",
+        "高松公園": "https://www.city.morioka.iwate.jp/kankou/kankou/1037103/1037212/sakura/1007958.html",
+
+        "弘前公園": "https://www.hirosakipark.jp/sakura/",
+        "弘前公園整日遊": "https://www.hirosakipark.jp/sakura/",
+
+        "十和田市現代美術館": "https://towadaartcenter.com/zh-hant/",
+        "Towada Barayaki": "https://www.city.towada.lg.jp/kanko/spot/kanchougaidoori.html",
+        "Barayaki": "https://www.city.towada.lg.jp/kanko/spot/kanchougaidoori.html",
+        "官廳街通": "https://www.city.towada.lg.jp/kanko/spot/kanchougaidoori.html",
+        "官庁街通り": "https://www.city.towada.lg.jp/kanko/spot/kanchougaidoori.html",
+
+        "S-PAL 仙台": "https://www.s-pal.jp/sendai/",
+        "AER": "https://www.sendai-aer.jp/",
+        "Parco": "https://sendai.parco.jp/",
+        "Clis Road": "https://www.clisroad.jp/",
+
+        "羽田花園": "https://www.shopping-sumitomo-rd.com/haneda/shopping/",
+        "Haneda Airport Garden": "https://www.shopping-sumitomo-rd.com/haneda/shopping/",
+        "江戶小路": "https://tokyo-haneda.com/floor/terminal3/4th_floor.html",
+        "TIAT": "https://duty-free-japan.jp/haneda/jp/",
+
+        "京急電鐵": "https://www.keikyu.co.jp/",
+        "京急電鐵（羽田": "https://www.keikyu.co.jp/",
+        "羽田空港第 3 航廈": "https://www.keikyu.co.jp/ride/kakueki/KK16.html",
+        "羽田機場第 3 航廈": "https://tokyo-haneda.com/terminal/terminal3/",
+        "東京單軌電車": "https://www.tokyo-monorail.co.jp/tc/",
+        "特急ひたち／ときわ": "https://www.jreast.co.jp/en/multi/traininformation/hitachi/",
+        "東北新幹線": "https://www.jreast.co.jp/en/multi/traininformation/",
+        "JR 仙石線": "https://www.jreast.co.jp/multi/traininformation/lines/lines_01.html",
+        "鹿島臨海鐵道": "https://www.rkto.co.jp/",
+        "大洗鹿島線": "https://www.rkto.co.jp/",
+
+        "水戶": "https://visit.ibarakiguide.jp/zh-hant/destinations/mito/",
+        "勝田": "https://www.hitachinaka-sa.com/",
+        "大洗": "https://www.oarai-info.jp/",
+        "仙台": "https://www.sentabi.jp/",
+        "松島": "https://www.matsushima.or.jp/",
+        "松島海岸": "https://www.matsushima-kanko.com/",
+        "盛岡": "https://visitiwate.com/",
+        "弘前": "https://www.hirosaki-kanko.or.jp/web/",
+        "七戶十和田": "https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1605",
+        "羽田機場": "https://tokyo-haneda.com/"
+      };
+
+      function linkify(txt=''){
+        let out = String(txt ?? '');
+        const entries = Object.entries(POI_LINKS).sort((a,b)=>b[0].length-a[0].length);
+        const placeholders = [];
+        entries.forEach(([k,url], idx)=>{
+          if(!k) return; const ph = `__POI_${idx}__`;
+          if (out.indexOf(k) !== -1) { out = out.split(k).join(ph); placeholders[idx] = `<a href="${url}" target="_blank" rel="noopener" class="underline decoration-dotted">${k}</a>`; }
+          else { placeholders[idx] = null; }
+        });
+        placeholders.forEach((html, idx)=>{ if(html) out = out.split(`__POI_${idx}__`).join(html); });
+        return out;
+      }
+      const ul = items => `<ul class="list-disc pl-5 space-y-1">${(items||[]).map(i=>`<li>${linkify(i)}</li>`).join('')}</ul>`;
+
+      const mealsBlock = m => `
+        <div class="rounded-xl border p-3 text-sm bg-white">
+          <div class="flex items-center gap-2 mb-2">🍽️ 三餐</div>
+          <ul class="space-y-1">
+            <li>早餐：${linkify(((m && m.breakfast) || '—'))}</li>
+            <li>午餐：${linkify(((m && m.lunch) || '—'))}</li>
+            <li>晚餐：${linkify(((m && m.dinner) || '—'))}</li>
+          </ul>
+        </div>`;
+
+      const lodgingBlock = txt => `
+        <div class="rounded-xl border p-3 text-sm bg-white">
+          <div class="flex items-center gap-2 mb-2">🛏️ 住宿</div>
+          <div>${linkify(txt || '')}</div>
+        </div>`;
+
+      const galleryHTML = (day, urls=[]) => `
+        <div class="gallery-grid mt-2" data-day="${day}">
+          ${urls.map(u=>`<div class="gallery-item aspect-fixed"><img src="${u}" alt="d${day}" class="w-full h-full object-cover cursor-zoom-in" loading="lazy" decoding="async" referrerpolicy="no-referrer" crossorigin="anonymous"></div>`).join('')}
+        </div>`;
+
+      const cardHTML = (d, det) => `
+        <div id="day-${d.day}" class="shadow-sm rounded-xl border bg-white scroll-mt-24">
+          <div class="p-4 border-b">
+            <div class="flex items-baseline justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center justify-center rounded-full bg-black text-white px-3 py-1 text-base md:text-lg font-semibold">第 ${d.day} 天</span>
+                <span class="text-lg md:text-2xl font-semibold tracking-tight">${d.date}</span>
+              </div>
+            </div>
+            <div class="text-xl md:text-2xl mt-2 font-semibold">${linkify(d.title)}</div>
+          </div>
+          ${(det.summary ? `<div class=\"px-4 pt-2 text-gray-700 text-sm md:text-base\">${linkify(det.summary)}</div>` : '')}
+          ${galleryHTML(d.day, d.gallery)}
+          <div class="rounded-xl border p-3 text-sm bg-white mt-2">
+            <div class="flex items-center gap-2 mb-2">🚆 交通動線</div>
+            ${ul(det.transport || [])}
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+            ${mealsBlock(det.meals || {})}
+            ${lodgingBlock(det.lodging || '')}
+          </div>
+          <details class="border rounded-xl mt-2 mb-6 group">
+            <summary class="w-full flex items-center justify-between px-3 py-2 text-sm cursor-pointer list-none">
+              <span class="flex items-center gap-2"><span class="chev transition-transform group-open:rotate-180">▾</span> 展開行程內容</span>
+            </summary>
+            <div class="px-4 pb-3 text-sm text-gray-600 space-y-4">
+              ${(det.sections||[]).map(sec=>`
+                <div>
+                  <div class="font-medium text-gray-800 mb-1">${sec.title}</div>
+                  ${ul(sec.items||[])}
+                </div>
+              `).join('')}
+            </div>
+          </details>
+        </div>`;
+
+      function renderItinerary(){
+        const wrap = document.getElementById('itineraryList');
+        wrap.innerHTML = DATA.itinerary.map(d => cardHTML(d, DETAILS[d.day]||{})).join('');
+      }
+
+      function bindModeToggle(){
+        const btn = document.getElementById('modeToggle'); if(!btn) return;
+        const sync = () => btn.textContent = document.body.classList.contains('mode-natural') ? '顯示模式：原比例' : '顯示模式：一致尺寸';
+        btn.addEventListener('click', ()=>{ document.body.classList.toggle('mode-natural'); sync(); });
+        sync();
+      }
+
+      function bindLightbox(){
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightboxImg');
+        const lbClose = document.getElementById('lightboxClose');
+        const btnPrev = document.getElementById('lightboxPrev');
+        const btnNext = document.getElementById('lightboxNext');
+        const counter = document.getElementById('lightboxCounter');
+        if(!lb || !lbImg) return;
+
+        let currentList = [];
+        let currentIndex = 0;
+
+        const getFullSrc = (imgEl)=> imgEl.getAttribute('data-fullsrc') || imgEl.src;
+        const updateCounter = ()=>{ if(counter){ counter.textContent = (currentList.length ? `${currentIndex+1} / ${currentList.length}` : ''); } };
+
+        function showAt(idx){
+          if(!currentList.length) return;
+          currentIndex = (idx + currentList.length) % currentList.length;
+          lbImg.src = currentList[currentIndex];
+          const pre1 = new Image(); pre1.src = currentList[(currentIndex+1)%currentList.length];
+          const pre2 = new Image(); pre2.src = currentList[(currentIndex-1+currentList.length)%currentList.length];
+          updateCounter();
+        }
+        function openFrom(img){
+          const grid = img.closest('.gallery-grid');
+          const imgs = grid ? Array.from(grid.querySelectorAll('img')) : [img];
+          currentList = imgs.map(getFullSrc);
+          currentIndex = Math.max(0, imgs.indexOf(img));
+          showAt(currentIndex);
+          if(typeof lb.showModal === 'function') lb.showModal();
+        }
+
+        document.querySelectorAll('.gallery-grid img').forEach(img => {
+          img.addEventListener('click', () => openFrom(img), {passive:true});
+        });
+
+        btnPrev && btnPrev.addEventListener('click', ()=> showAt(currentIndex-1));
+        btnNext && btnNext.addEventListener('click', ()=> showAt(currentIndex+1));
+
+        window.addEventListener('keydown', (e)=>{
+          if(!lb.open) return;
+          if(e.key==='Escape') lb.close();
+          else if(e.key==='ArrowLeft') showAt(currentIndex-1);
+          else if(e.key==='ArrowRight') showAt(currentIndex+1);
+        });
+
+        lb.addEventListener('click', (e)=>{ if(e.target===lb) lb.close(); });
+        lbClose && lbClose.addEventListener('click', ()=> lb.close());
+
+        let touchX = null;
+        lbImg.addEventListener('touchstart', (e)=>{ touchX = e.touches[0].clientX; }, {passive:true});
+        lbImg.addEventListener('touchend', (e)=>{
+          if(touchX===null) return; const dx = (e.changedTouches[0].clientX - touchX);
+          if(Math.abs(dx) > 40){ dx < 0 ? showAt(currentIndex+1) : showAt(currentIndex-1); }
+          touchX = null;
+        }, {passive:true});
+      }
+
+      function proxyURL(u, opts={}){
+        try{
+          const x = new URL(u);
+          const params = new URLSearchParams();
+          const w = opts.w || 1280; params.set('url', x.host + x.pathname + (x.search||'')); params.set('w', w); params.set('output', 'webp');
+          return 'https://images.weserv.nl/?' + params.toString();
+        }catch(e){ return u; }
+      }
+      function bindImgFallback(){
+        const attach = (img)=>{
+          const toProxy = () => { if(img.dataset.fallback) return; img.dataset.fallback = '1'; img.src = proxyURL(img.src); };
+          img.addEventListener('error', toProxy, {passive:true});
+          let timer = null;
+          const onEnter = (entries)=>{ entries.forEach(en=>{ if(en.isIntersecting){ if(img.complete) return; if(timer) return; timer = setTimeout(()=>{ if(!img.complete) toProxy(); }, 2500); } }); };
+          const io = new IntersectionObserver(onEnter, {rootMargin: '200px'}); io.observe(img);
+          img.addEventListener('load', ()=>{ if(timer){ clearTimeout(timer); timer=null; } }, {passive:true});
+        };
+        document.querySelectorAll('img').forEach(attach);
+        const obs = new MutationObserver((muts)=>{ muts.forEach(m=>{ m.addedNodes && m.addedNodes.forEach(node=>{ if(node.nodeType===1){ if(node.tagName==='IMG') attach(node); node.querySelectorAll && node.querySelectorAll('img').forEach(attach); } }); }); });
+        obs.observe(document.body, {childList:true, subtree:true});
+      }
+
+      document.getElementById('dljson').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify({DATA, DETAILS}, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'ibarakitohoku-9days.json'; a.click(); URL.revokeObjectURL(url);
+      });
+
+      function runSelfTests(){
+        try {
+          console.assert(Array.isArray(DATA.itinerary), 'itinerary should be an array');
+          console.assert(DATA.itinerary.length === 9, 'itinerary should have 9 days');
+          const days = DATA.itinerary.map(d=>d.day);
+          console.assert(days.join(',') === '1,2,3,4,5,6,7,8,9', 'days should be 1..9');
+          console.assert(DATA.itinerary.every(d=>Array.isArray(d.gallery)), 'each day.gallery should be an array');
+          console.assert(DATA.flights.outbound.depTime && DATA.flights.inbound.arrTime, 'flight times should be set');
+          setTimeout(()=>{
+            const wrap = document.getElementById('itineraryList');
+            console.assert(wrap && wrap.children.length === 9, 'should render 9 day cards');
+          }, 0);
+
+          setTimeout(()=>{
+            const firstImg = document.querySelector('.gallery-grid img');
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            if(firstImg && lb && lbImg && typeof lb.showModal === 'function'){
+              const grid = firstImg.closest('.gallery-grid');
+              const imgs = grid ? Array.from(grid.querySelectorAll('img')) : [];
+              firstImg.click();
+              console.assert(lb.open === true, 'lightbox should be open after click');
+              const before = lbImg.src;
+              const ev = new KeyboardEvent('keydown', {key:'ArrowRight'});
+              window.dispatchEvent(ev);
+              if(imgs.length > 1){
+                console.assert(lbImg.src !== before, 'lightbox image should change on ArrowRight');
+              }
+              lb.close();
+            }
+          }, 80);
+
+          setTimeout(()=>{
+            const btn = document.getElementById('modeToggle');
+            if(btn){
+              const wasNatural = document.body.classList.contains('mode-natural');
+              btn.click();
+              console.assert(document.body.classList.contains('mode-natural') !== wasNatural, 'modeToggle should toggle class');
+              btn.click();
+            }
+          }, 60);
+        } catch(e){
+          console.error('Self-tests failed:', e);
+        }
+      }
+
+      renderItinerary();
+      bindModeToggle();
+      bindLightbox();
+      bindImgFallback();
+      runSelfTests();
+    </script>
+  </body>
+</html>
