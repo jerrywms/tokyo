@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>日本 47 都道府縣 ‧ 征服統計（SVG 固定地圖 + 方塊地圖）</title>
+<style>
+  :root{
+    --bg:#f9f9fb; --panel:#ffffff; --panel-2:#f3f4f6; --text:#1f2937; --muted:#6b7280;
+    --border:#e5e7eb; --chip:#eef2f7; --brand:#2563eb; --accent:#10b981; --danger:#ef4444;
+    --warn:#f59e0b; --shadow:0 6px 18px rgba(0,0,0,.06); --radius:12px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "Helvetica Neue", Arial;}
+  header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);
+    backdrop-filter:saturate(160%) blur(10px); border-bottom:1px solid var(--border)}
+  .wrap{max-width:1200px;margin-inline:auto;padding-inline:20px}
+  .hbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0}
+  h1{margin:0;font-size:20px;font-weight:800}
+  .pill{background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted)}
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 18px}
+  .toolbar input[type="search"]{flex:1 1 260px;min-width:190px;background:#fff;border:1px solid var(--border);
+    color:var(--text);padding:10px 12px;border-radius:10px}
+  .btn{background:#fff;border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow)}
+  .btn.danger{border-color:var(--danger);color:#b91c1c}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel .head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline}
+  .panel .body{padding:12px 14px}
+  .tag{padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:var(--chip);font-size:12px;color:var(--muted)}
+
+  /* 單欄排版 */
+  .stack{display:grid; gap:16px}
+
+  /* 統計卡 */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(min-width:680px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px}
+  .stat h3{margin:0;font-size:12px;color:var(--muted)}
+  .stat .v{font-size:20px;margin-top:4px;font-weight:700}
+  .bar{height:6px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:6px}
+  .bar>i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,var(--brand),var(--accent))}
+
+  /* 總分卡（特別凸顯） */
+  .score{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .score .meter{height:10px;background:#e5e7eb;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .score .meter>i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,#60a5fa,#34d399)}
+  .score-left{display:flex;flex-direction:column;gap:6px}
+  .score-title{display:flex;align-items:center;gap:6px;font-weight:900;letter-spacing:.6px;
+    background:linear-gradient(90deg,#ef4444,#f59e0b,#facc15);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 0 12px rgba(255,153,0,.28)}
+  .score-title .emj{filter:saturate(130%)}
+  .score-points{font-size:40px;line-height:1;font-weight:900;
+    background:linear-gradient(90deg,#ef4444,#f59e0b,#facc15);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 0 14px rgba(255,153,0,.35)}
+  .score-max{font-size:16px;color:var(--muted);margin-left:6px}
+  @keyframes bump { 0%{transform:scale(1)} 20%{transform:scale(1.08)} 100%{transform:scale(1)} }
+  .score-points.bump{ animation: bump .5s ease; }
+
+  /* SVG 固定地圖 */
+  #svgWrap{width:100%;}
+  #jpSvg{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);background:#fff}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .legend.vert{position:absolute;right:40px;bottom:40px;flex-direction:column;gap:6px;margin-top:0;
+    background:rgba(255,255,255,.92);backdrop-filter:saturate(140%) blur(6px);
+    border:1px solid var(--border);border-radius:10px;padding:8px;box-shadow:var(--shadow)}
+  .legend.vert .badge{background:transparent;border:none;padding:2px 0;font-size:13px}
+  .badge{display:flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--border);
+    border-radius:999px;background:var(--chip);font-size:12px;color:var(--muted)}
+  .swatch{width:14px;height:14px;border-radius:3px;border:1px solid var(--border)}
+  .pref{stroke:#9aa3b2;stroke-width:1;fill:#ddd;cursor:pointer;transition:filter .15s ease}
+  .pref:hover{filter:brightness(1.05)}
+  .pref.active{stroke-width:2}
+  .map-tip{position:absolute;pointer-events:none;padding:6px 8px;border:1px solid var(--border);background:#fff;border-radius:8px;box-shadow:var(--shadow);font-size:12px;color:var(--text);}
+
+  /* 方塊地圖 */
+  .tile-legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px}
+  .mapWrap{display:grid;gap:12px}
+  .regionRow{border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:10px}
+  .regionRow>h4{margin:0 0 8px;color:var(--muted);font-size:12px;letter-spacing:.3px}
+  .tileGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+  .tile{user-select:none; cursor:pointer;background:var(--panel-2); border:1px solid var(--border); border-radius:10px;
+    padding:8px; text-align:center; line-height:1.15; transition:transform .06s ease, box-shadow .15s ease, border-color .15s ease; box-shadow:var(--shadow);}
+  .tile:hover{transform:translateY(-1px)}
+  .tile b{display:block; font-size:12px}
+  .tile small{display:block; font-size:11px; color:var(--muted)}
+  .tile .sts{display:inline-block;margin-top:6px;font-size:11px;color:var(--muted);padding:2px 6px;border:1px solid var(--border);border-radius:999px;background:var(--chip)}
+  .tile[data-status="0"]{background:#f0f0f0}
+  .tile[data-status="1"]{background:#60a5fa}
+  .tile[data-status="2"]{background:#34d399}
+  .tile[data-status="3"]{background:#f6e05e}
+  .tile[data-status="4"]{background:#ed8936}
+  .tile[data-status="5"]{background:#ef4444;color:#fff}
+  .flash{animation:flash 1s ease}
+  @keyframes flash{0%{box-shadow:0 0 0 0 rgba(37,99,235,.5)}100%{box-shadow:0 0 0 16px rgba(37,99,235,0)}}
+
+  /* 清單 */
+  .plist{display:grid;gap:8px;padding:10px}
+  .prow{display:grid;grid-template-columns:1.5fr 1fr 1fr 2fr;gap:6px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px}
+  .prow .name{display:flex;flex-direction:column;gap:2px}
+  .prow small{color:var(--muted)}
+  select,input,textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:6px 8px;background:#fff;color:var(--text)}
+  textarea{min-height:34px;resize:vertical}
+  details.region{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  details.region summary{cursor:pointer;list-style:none;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+  details.region summary::-webkit-details-marker{display:none}
+  .rbar{height:6px;border-radius:999px;background:#e5e7eb;overflow:hidden;border:1px solid var(--border);width:160px}
+  .rbar>i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,#60a5fa,#34d399)}
+  .hidden{display:none!important}
+  .small{font-size:12px} .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hbar">
+    <h1>🇯🇵 日本 47 都道府縣 ‧ 征服統計</h1>
+    <span class="pill">本機儲存（localStorage）</span>
+    <span class="pill">匯出／匯入 JSON 備份</span>
+  </div>
+</header>
+
+<main class="wrap" style="padding:18px 0 40px">
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="搜尋都道府縣／假名／羅馬拼音（按 / 聚焦）" />
+    <button id="btnExport" class="btn">匯出 JSON</button>
+    <label class="btn" for="fileImport">匯入 JSON</label>
+    <input id="fileImport" class="hidden" type="file" accept=".json,application/json" />
+    <button id="btnReset" class="btn danger">全部重置</button>
+  </div>
+
+  <!-- Row 1: SVG 固定視角地圖（置頂） -->
+  <section class="stack">
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="muted">固定視角地圖（SVG，顯示完整日本）</div>
+          <div class="small muted">顏色依你的狀態即時更新；點縣界可跳到下方詳細列（<b>Alt</b>+點擊可循環狀態）</div>
+        </div>
+        <div class="tag">離線可用（首次載入 GeoJSON 後）</div>
+      </div>
+      <div class="body" style="position:relative">
+        <div id="svgWrap">
+          <svg id="jpSvg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="legend vert">
+          <span class="badge"><span class="swatch" style="background:#f0f0f0"></span> 沒去過-0</span>
+          <span class="badge"><span class="swatch" style="background:#60a5fa"></span> 路過-1</span>
+          <span class="badge"><span class="swatch" style="background:#34d399"></span> 接地（轉乘）-2</span>
+          <span class="badge"><span class="swatch" style="background:#f6e05e"></span> 遊玩過-3</span>
+          <span class="badge"><span class="swatch" style="background:#ed8936"></span> 住宿過-4</span>
+          <span class="badge"><span class="swatch" style="background:#ef4444"></span> 居住過-5</span>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- Row 2: 統計總覽（含制縣總分） -->
+  <section class="stack" style="margin-top:16px">
+    <section class="panel">
+      <div class="head">
+        <div><div class="muted">總覽</div><div class="small muted">依據你的選擇自動更新</div></div>
+        <div class="tag">單位：都道府縣</div>
+      </div>
+      <div class="body" style="display:grid; gap:12px">
+        <div class="score">
+          <div class="score-left">
+            <div class="score-title"><span class="emj">🏆</span> 制縣總分</div>
+            <div class="score-points"><span id="statScore">0</span><span class="score-max"> / 235</span></div>
+          </div>
+          <div style="flex:1">
+            <div class="meter"><i id="barScore" style="--w:0%"></i></div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><h3>已踏足（含路過）</h3><div class="v" id="statTouched">0 / 47</div><div class="bar"><i id="barTouched"></i></div></div>
+          <div class="stat"><h3>到訪（不含路過與接地）</h3><div class="v" id="statVisited">0 / 47</div><div class="bar"><i id="barVisited"></i></div></div>
+          <div class="stat"><h3>深度／長住（含住宿、居住）</h3><div class="v" id="statDeep">0 / 47</div><div class="bar"><i id="barDeep"></i></div></div>
+          <div class="stat"><h3>到訪次數合計</h3><div class="v" id="statVisits">0 次</div></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- Row 3: 方塊地圖 -->
+  <section class="stack" style="margin-top:16px">
+    <section class="panel">
+      <div class="head">
+        <div>
+          <div class="muted">地理視覺化・方塊地圖</div>
+          <div class="small muted">依區域分行排列；顏色對應你的狀態；點擊可捲動到清單（<b>Alt</b>+點擊可循環狀態）</div>
+        </div>
+        <div class="tag">完全離線</div>
+      </div>
+      <div class="body">
+        <div class="tile-legend">
+          <span class="badge"><span class="swatch" style="background:#f0f0f0"></span> 沒去過-0</span>
+          <span class="badge"><span class="swatch" style="background:#60a5fa"></span> 路過-1</span>
+          <span class="badge"><span class="swatch" style="background:#34d399"></span> 接地（轉乘）-2</span>
+          <span class="badge"><span class="swatch" style="background:#f6e05e"></span> 遊玩過-3</span>
+          <span class="badge"><span class="swatch" style="background:#ed8936"></span> 住宿過-4</span>
+          <span class="badge"><span class="swatch" style="background:#ef4444"></span> 居住過-5</span>
+        </div>
+        <div id="tileMap" class="mapWrap"></div>
+        <div class="small muted" style="margin-top:8px">提示：方塊上 <b>Alt</b>+點擊 快速切換狀態；一般點擊會定位到下方清單。</div>
+      </div>
+    </section>
+  </section>
+
+  <!-- Row 4: 詳細清單 -->
+  <section id="regionsContainer" style="margin-top:16px;display:grid;gap:12px"></section>
+
+  <div class="small muted" style="text-align:center;margin-top:10px">
+    資料僅存於此瀏覽器（localStorage）。可用匯出／匯入於不同裝置間轉移。
+  </div>
+</main>
+
+<!-- Templates -->
+<template id="regionTpl">
+  <details class="region" open>
+    <summary>
+      <div style="display:flex;gap:10px;align-items:center">
+        <b class="rname"></b>
+        <span class="small muted rcount">0 / 0</span>
+      </div>
+      <div class="rbar"><i style="--w:0%"></i></div>
+    </summary>
+    <div class="plist"></div>
+  </details>
+</template>
+
+<template id="prefTpl">
+  <div class="prow">
+    <div class="name">
+      <b class="n-zh"></b>
+      <small><span class="n-jp"></span> ・ <span class="n-romaji"></span></small>
+    </div>
+    <div>
+      <select class="status">
+        <option value="0">沒去過-0</option>
+        <option value="1">路過-1</option>
+        <option value="2">接地（轉乘）-2</option>
+        <option value="3">遊玩過-3</option>
+        <option value="4">住宿過-4</option>
+        <option value="5">居住過-5</option>
+      </select>
+    </div>
+    <div><input class="visits" type="number" min="0" step="1" value="0" title="到訪次數" /></div>
+    <div><textarea class="note" placeholder="備註（例如：最後到訪 2024-12、必吃拉麵、賞楓絕佳）"></textarea></div>
+  </div>
+</template>
+
+<script>
+/* ------------ 配色（依主上指定） ------------ */
+const COLOR = {
+  0:"#f0f0f0", // 沒去過 灰白 0分
+  1:"#60a5fa", // 路過 藍 1分
+  2:"#34d399", // 接地(轉乘) 綠 2分
+  3:"#f6e05e", // 遊玩過 黃 3分
+  4:"#ed8936", // 住宿過 橙 4分
+  5:"#ef4444"  // 居住過 紅 5分
+};
+
+/* ------------ 基本資料 & 儲存（含 v1 -> v2 遷移） ------------ */
+const STORAGE_KEY_V2 = "jp47-tracker-v2"; // 新 key，避免舊版本誤讀
+const LEGACY_KEY_V1 = "jp47-tracker-v1";
+// 狀態與分數映射
+const STATUS = [
+  {k:0,label:"沒去過-0",score:0},
+  {k:1,label:"路過-1",score:1},
+  {k:2,label:"接地（轉乘）-2",score:2},
+  {k:3,label:"遊玩過-3",score:3},
+  {k:4,label:"住宿過-4",score:4},
+  {k:5,label:"居住過-5",score:5}
+];
+const REGIONS = ["北海道","東北","關東","中部","近畿","中國","四國","九州・沖繩"];
+const PREFS = [
+  ["hokkaido","北海道","北海道","Hokkaidō","北海道"],
+  ["aomori","青森縣","青森県","Aomori","東北"],["iwate","岩手縣","岩手県","Iwate","東北"],
+  ["miyagi","宮城縣","宮城県","Miyagi","東北"],["akita","秋田縣","秋田県","Akita","東北"],
+  ["yamagata","山形縣","山形県","Yamagata","東北"],["fukushima","福島縣","福島県","Fukushima","東北"],
+  ["ibaraki","茨城縣","茨城県","Ibaraki","關東"],["tochigi","栃木縣","栃木県","Tochigi","關東"],
+  ["gunma","群馬縣","群馬県","Gunma","關東"],["saitama","埼玉縣","埼玉県","Saitama","關東"],
+  ["chiba","千葉縣","千葉県","Chiba","關東"],["tokyo","東京都","東京都","Tōkyō","關東"],
+  ["kanagawa","神奈川縣","神奈川県","Kanagawa","關東"],
+  ["niigata","新潟縣","新潟県","Niigata","中部"],["toyama","富山縣","富山県","Toyama","中部"],
+  ["ishikawa","石川縣","石川県","Ishikawa","中部"],["fukui","福井縣","福井県","Fukui","中部"],
+  ["yamanashi","山梨縣","山梨県","Yamanashi","中部"],["nagano","長野縣","長野県","Nagano","中部"],
+  ["gifu","岐阜縣","岐阜県","Gifu","中部"],["shizuoka","靜岡縣","静岡県","Shizuoka","中部"],
+  ["aichi","愛知縣","愛知県","Aichi","中部"],["mie","三重縣","三重県","Mie","中部"],
+  ["shiga","滋賀縣","滋賀県","Shiga","近畿"],["kyoto","京都府","京都府","Kyōto","近畿"],
+  ["osaka","大阪府","大阪府","Ōsaka","近畿"],["hyogo","兵庫縣","兵庫県","Hyōgo","近畿"],
+  ["nara","奈良縣","奈良県","Nara","近畿"],["wakayama","和歌山縣","和歌山県","Wakayama","近畿"],
+  ["tottori","鳥取縣","鳥取県","Tottori","中國"],["shimane","島根縣","島根県","Shimane","中國"],
+  ["okayama","岡山縣","岡山県","Okayama","中國"],["hiroshima","廣島縣","広島県","Hiroshima","中國"],
+  ["yamaguchi","山口縣","山口県","Yamaguchi","中國"],
+  ["tokushima","德島縣","徳島県","Tokushima","四國"],["kagawa","香川縣","香川県","Kagawa","四國"],
+  ["ehime","愛媛縣","愛媛県","Ehime","四國"],["kochi","高知縣","高知県","Kōchi","四國"],
+  ["fukuoka","福岡縣","福岡県","Fukuoka","九州・沖繩"],["saga","佐賀縣","佐賀県","Saga","九州・沖繩"],
+  ["nagasaki","長崎縣","長崎県","Nagasaki","九州・沖繩"],["kumamoto","熊本縣","熊本県","Kumamoto","九州・沖繩"],
+  ["oita","大分縣","大分県","Ōita","九州・沖繩"],["miyazaki","宮崎縣","宮崎県","Miyazaki","九州・沖繩"],
+  ["kagoshima","鹿兒島縣","鹿児島県","Kagoshima","九州・沖繩"],["okinawa","沖繩縣","沖縄県","Okinawa","九州・沖繩"],
+].map(([id, zh, jp, romaji, region]) => ({id, zh, jp, romaji, region}));
+
+function blankState(){ const o={}; PREFS.forEach(p=>o[p.id]={status:0,visits:0,note:""}); return o; }
+
+function migrateV1toV2(obj){
+  // v1 狀態：0 未探索,1 路過,2 到此一遊,3 深度旅遊,4 居住/長住
+  // v2 需要插入新的 2「接地(轉乘)」，因此：2->3, 3->4, 4->5
+  const next = blankState();
+  for(const k in next){
+    const src = obj[k] || {status:0,visits:0,note:""};
+    let st = +src.status||0;
+    if (st>=2) st = Math.min(5, st+1);
+    next[k] = {status:st, visits:+src.visits||0, note:String(src.note||"")};
+  }
+  return next;
+}
+
+function loadState(){
+  try{
+    const rawV2 = localStorage.getItem(STORAGE_KEY_V2);
+    if (rawV2){
+      const obj = JSON.parse(rawV2);
+      const base = blankState();
+      for(const k in obj){ if(base[k]){ base[k].status=+obj[k].status||0; base[k].visits=+obj[k].visits||0; base[k].note=String(obj[k].note||""); } }
+      return base;
+    }
+    // 嘗試讀取 v1 並遷移
+    const rawV1 = localStorage.getItem(LEGACY_KEY_V1);
+    if (rawV1){
+      const obj1 = JSON.parse(rawV1);
+      const migrated = migrateV1toV2(obj1);
+      saveState(migrated);
+      return migrated;
+    }
+    return blankState();
+  }catch{ return blankState(); }
+}
+
+function saveState(s){ localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(s)); }
+let STATE = loadState();
+
+/* ------------ 建構清單 UI ------------ */
+const $regionsContainer = document.getElementById("regionsContainer");
+const $regionTpl = document.getElementById("regionTpl");
+const $prefTpl = document.getElementById("prefTpl");
+const rowRefs = {}; const regionRefs = {};
+const groups = REGIONS.map(r => ({ region:r, prefs:PREFS.filter(p => p.region===r) }));
+
+groups.forEach(g=>{
+  const $r = $regionTpl.content.firstElementChild.cloneNode(true);
+  $r.querySelector(".rname").textContent = g.region;
+  const $list = $r.querySelector(".plist");
+  g.prefs.forEach(p=>{
+    const $row = $prefTpl.content.firstElementChild.cloneNode(true);
+    $row.dataset.pid = p.id;
+    $row.querySelector(".n-zh").textContent = p.zh;
+    $row.querySelector(".n-jp").textContent = p.jp;
+    $row.querySelector(".n-romaji").textContent = p.romaji;
+    const $status = $row.querySelector(".status");
+    const $visits = $row.querySelector(".visits");
+    const $note = $row.querySelector(".note");
+    const st = STATE[p.id] ?? {status:0,visits:0,note:""};
+    $status.value = String(st.status); $visits.value = String(st.visits); $note.value = st.note||"";
+    $status.addEventListener("change", ()=>onChange(p.id,"status", +$status.value));
+    $visits.addEventListener("input", ()=>onChange(p.id,"visits", clampInt($visits.value)));
+    $note.addEventListener("input", ()=>onChange(p.id,"note", $note.value));
+    $list.appendChild($row);
+    rowRefs[p.id] = { row:$row, status:$status, visits:$visits, note:$note, name:p.zh, jp:p.jp, romaji:p.romaji, region:g.region };
+  });
+  const $rcount = $r.querySelector(".rcount");
+  const $rbar = $r.querySelector(".rbar > i");
+  regionRefs[g.region] = { root:$r, list:$list, bar:$rbar, count:$rcount, prefs:g.prefs.map(p=>p.id) };
+  $regionsContainer.appendChild($r);
+});
+
+/* ------------ 統計 ------------ */
+const $statScore = document.getElementById("statScore");
+const $barScore = document.getElementById("barScore");
+const $statTouched = document.getElementById("statTouched");
+const $statVisited = document.getElementById("statVisited");
+const $statDeep = document.getElementById("statDeep");
+const $statVisits = document.getElementById("statVisits");
+const $barTouched = document.getElementById("barTouched");
+const $barVisited = document.getElementById("barVisited");
+const $barDeep = document.getElementById("barDeep");
+let _prevScore = null;
+
+function pct(n){ return (Math.round(n*1000)/10)+"%"; }
+function clampInt(v){ v=String(v).replace(/[^\d]/g,""); return Math.max(0, parseInt(v||"0",10)); }
+function computeStats(){
+  let touched=0, visited=0, deep=0, visits=0, score=0;
+  PREFS.forEach(p=>{
+    const s = STATE[p.id]||{status:0,visits:0};
+    const st = +s.status||0;
+    if(st>=1) touched++;
+    if(st>=3) visited++;
+    if(st>=4) deep++;
+    visits += +s.visits||0;
+    score += STATUS[st]?.score ?? 0;
+  });
+  const MAX_SCORE = 47*5; // 235
+  $statScore.textContent = `${score}`;
+  if(_prevScore !== null && _prevScore !== score){
+    const el = document.querySelector('.score-points');
+    if(el){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+  }
+  _prevScore = score;
+  $barScore?.style.setProperty("--w", pct(score/MAX_SCORE));
+
+  $statTouched.textContent = `${touched} / 47`;
+  $statVisited.textContent = `${visited} / 47`;
+  $statDeep.textContent = `${deep} / 47`;
+  $statVisits.textContent = `${visits} 次`;
+  $barTouched?.style.setProperty("--w", pct(touched/47));
+  $barVisited?.style.setProperty("--w", pct(visited/47));
+  $barDeep?.style.setProperty("--w", pct(deep/47));
+
+  for(const r in regionRefs){
+    const ref=regionRefs[r]; const ids=ref.prefs;
+    let v=0; ids.forEach(id=>{ if((STATE[id]?.status??0)>=3) v++; });
+    ref.count.textContent = `${v} / ${ids.length}`; ref.bar.style.setProperty("--w", pct(v/ids.length));
+  }
+  updateSvgChoropleth();
+  updateAllTiles();
+}
+function onChange(id, key, value){
+  if(!STATE[id]) STATE[id]={status:0,visits:0,note:""};
+  STATE[id][key] = value; saveState(STATE);
+  computeStats(); applyFilter(document.getElementById("search").value.trim());
+}
+
+/* ------------ 搜尋 ------------ */
+const $search = document.getElementById("search");
+$search.addEventListener("input", ()=>applyFilter($search.value.trim()));
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
+    e.preventDefault(); $search.focus();
+  }
+});
+function applyFilter(q){
+  q = q.toLowerCase(); const showAll=!q; const regionVisible={};
+  Object.keys(rowRefs).forEach(id=>{
+    const r=rowRefs[id];
+    const hit = showAll || r.name.toLowerCase().includes(q) || r.jp.includes(q) || (r.romaji||"").toLowerCase().includes(q);
+    r.row.classList.toggle("hidden", !hit); if(hit) regionVisible[r.region]=true;
+  });
+  for(const r in regionRefs){
+    const ref=regionRefs[r]; const visible = showAll || !!regionVisible[r];
+    ref.root.classList.toggle("hidden", !visible);
+  }
+}
+
+/* ------------ 匯出／匯入／重置 ------------ */
+document.getElementById("btnExport").addEventListener("click", ()=>{
+  const dataStr = JSON.stringify(STATE, null, 2);
+  const blob = new Blob([dataStr], {type:"application/json"});
+  const url = URL.createObjectURL(blob); const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  a.href=url; a.download=`jp47-tracker-${stamp}.json`; a.click(); URL.revokeObjectURL(url);
+});
+
+document.getElementById("fileImport").addEventListener("change",(e)=>{
+  const file=e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(reader.result);
+      let maxStatus = 0; for(const k in obj){ if(obj[k] && obj[k].status!=null){ maxStatus = Math.max(maxStatus, +obj[k].status||0); } }
+      let next;
+      if(maxStatus<=4){ next = migrateV1toV2(obj); } else { next = blankState(); PREFS.forEach(p=>{ if(obj[p.id]){ next[p.id].status=+obj[p.id].status||0; next[p.id].visits=+obj[p.id].visits||0; next[p.id].note=String(obj[p.id].note||""); }}); }
+      STATE = next; saveState(STATE);
+      for(const id in rowRefs){ rowRefs[id].status.value=String(STATE[id].status); rowRefs[id].visits.value=String(STATE[id].visits); rowRefs[id].note.value=STATE[id].note||""; }
+      computeStats(); applyFilter($search.value.trim()); alert("匯入成功！");
+    }catch{ alert("匯入失敗，請確認 JSON 格式。"); }
+    finally{ e.target.value=""; }
+  };
+  reader.readAsText(file,"utf-8");
+});
+
+document.getElementById("btnReset").addEventListener("click", ()=>{
+  if(!confirm("確定要重置所有資料嗎？建議先匯出備份。")) return;
+  STATE = blankState(); saveState(STATE);
+  for(const id in rowRefs){ rowRefs[id].status.value="0"; rowRefs[id].visits.value="0"; rowRefs[id].note.value=""; }
+  computeStats(); applyFilter($search.value.trim());
+});
+
+/* ------------ 方塊地圖（Tile Map） ------------ */
+function renderTileMap(){
+  const wrap = document.getElementById("tileMap");
+  wrap.innerHTML = "";
+  REGIONS.forEach(region => {
+    const block = document.createElement("div");
+    block.className = "regionRow";
+    block.innerHTML = `<h4>${region}</h4><div class="tileGrid"></div>`;
+    const grid = block.querySelector(".tileGrid");
+    PREFS.filter(p=>p.region===region).forEach(p=>{
+      const st = STATE[p.id]?.status ?? 0;
+      const v = STATE[p.id]?.visits ?? 0;
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.dataset.pid = p.id;
+      tile.dataset.status = String(st);
+      tile.innerHTML = `
+        <b>${p.zh.replace("縣","").replace("府","").replace("都","")}</b>
+        <small>${p.romaji}</small>
+        <span class="sts">${STATUS[st].label}${v?`・${v}次`:""}</span>
+      `;
+      tile.addEventListener("click",(e)=>{
+        if(e.altKey){
+          const next = ((STATE[p.id]?.status ?? 0) + 1) % STATUS.length;
+          onChange(p.id,"status",next);
+          if(rowRefs[p.id]) rowRefs[p.id].status.value = String(next);
+          return;
+        }
+        const row = rowRefs[p.id]?.row;
+        if(row){ row.scrollIntoView({behavior:"smooth", block:"center"}); row.classList.add("flash"); setTimeout(()=>row.classList.remove("flash"), 1000); }
+      });
+      grid.appendChild(tile);
+    });
+    wrap.appendChild(block);
+  });
+}
+function updateTile(pid){
+  const tile = document.querySelector(`.tile[data-pid="${pid}"]`); if(!tile) return;
+  const st = STATE[pid]?.status ?? 0;
+  const v = STATE[pid]?.visits ?? 0;
+  tile.dataset.status = String(st);
+  tile.querySelector(".sts").textContent = `${STATUS[st].label}${v?`・${v}次`:""}`;
+}
+function updateAllTiles(){ PREFS.forEach(p=>updateTile(p.id)); }
+
+/* ------------ SVG 地圖（以 GeoJSON 轉 SVG path） ------------ */
+const GEOJSON_SOURCES = [
+  "https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson",
+  "https://raw.githubusercontent.com/niiyz/JapanCityGeoJson/master/data/prefectures.geojson",
+  "https://raw.githubusercontent.com/code4fukui/jisx0402/master/pref.geojson"
+];
+function getFeatureNameJa(props){
+  return props.name_ja || props.nam_ja || props.nam || props.name || props.N03_001 || props.PREF || props.prefecture || props.pref || "";
+}
+const nameToId = (()=> {
+  const m={}; PREFS.forEach(p=>{
+    const ja = p.jp; const base = ja.replace(/(都|道|府|県)$/i,"");
+    const alt = p.zh.replace("縣","県").replace("沖繩","沖縄").replace("廣島","広島");
+    [ja, base, alt, alt.replace(/(都|道|府|県)$/i,"")].forEach(k=>m[k]=p.id);
+  }); return m;
+})();
+
+function lonlatToXY(lon, lat, bbox, w=1000, h=520){
+  const [minLon,minLat,maxLon,maxLat] = bbox;
+  const x = (lon - minLon) / (maxLon - minLon) * w;
+  const y = (maxLat - lat) / (maxLat - minLat) * h; // 反轉 Y
+  return [x,y];
+}
+
+function ringsToPath(rings, bbox){
+  let d = "";
+  rings.forEach(ring=>{
+    ring.forEach((pt,i)=>{
+      const [x,y] = lonlatToXY(pt[0], pt[1], bbox);
+      d += (i?"L":"M") + x.toFixed(2) + "," + y.toFixed(2);
+    });
+    d += "Z";
+  });
+  return d;
+}
+
+
+  
+// 具尺寸參數的版本（供 inset 或不同畫布大小使用）
+function ringsToPathScaled(rings, bbox, w, h){
+  let d = "";
+  rings.forEach(ring=>{
+    ring.forEach((pt,i)=>{
+      const [x,y] = lonlatToXY(pt[0], pt[1], bbox, w, h);
+      d += (i?"L":"M") + x.toFixed(2) + "," + y.toFixed(2);
+    });
+    d += "Z";
+  });
+  return d;
+}
+
+function computeBBox(features){
+  let minLon=180, minLat=90, maxLon=-180, maxLat=-90;
+  features.forEach(f=>{
+    const g=f.geometry;
+    const visitCoord=(c)=>{ c.forEach(p=>{ const lon=p[0], lat=p[1]; if(lon<minLon)minLon=lon; if(lon>maxLon)maxLon=lon; if(lat<minLat)minLat=lat; if(lat>maxLat)maxLat=lat; }); };
+    if(!g) return;
+    if(g.type==="Polygon") g.coordinates.forEach(r=>visitCoord(r));
+    if(g.type==="MultiPolygon") g.coordinates.forEach(poly=>poly.forEach(r=>visitCoord(r)));
+  });
+  // 稍微加一點 padding 讓外觀不貼邊
+  const padLon = (maxLon-minLon)*0.02; const padLat=(maxLat-minLat)*0.05;
+  return [minLon-padLon, minLat-padLat, maxLon+padLon, maxLat+padLat];
+}
+
+function buildSvgMap(geojson){
+  const svg = document.getElementById('jpSvg');
+  const feats = geojson.features;
+  const bbox = computeBBox(feats);
+  // 清空重繪
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  // 建 group
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  svg.appendChild(g);
+
+  feats.forEach(f=>{
+    const nameJa = String(getFeatureNameJa(f.properties)||"");
+    const key = nameJa.replace(/\s/g,"");
+    const pid = nameToId[key] || nameToId[key.replace(/(都|道|府|県)$/i,"")];
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.classList.add('pref');
+    if(pid) path.dataset.pid = pid;
+
+    let d="";
+    if(f.geometry && f.geometry.type==="Polygon"){
+      d = ringsToPath(f.geometry.coordinates, bbox);
+    }else if(f.geometry && f.geometry.type==="MultiPolygon"){
+      f.geometry.coordinates.forEach(poly=>{ d += ringsToPath(poly, bbox); });
+    }
+    path.setAttribute('d', d);
+
+    // 著色
+    const st = pid ? (STATE[pid]?.status ?? 0) : 0;
+    path.style.fill = COLOR[st] || '#ddd';
+
+    // 互動
+    path.addEventListener('mouseover', ()=>{ path.classList.add('active'); const cur = pid ? (+((STATE[pid]?.status) || 0)) : 0; const vs = pid ? (+((STATE[pid]?.visits) || 0)) : 0; showTip(`${nameJa}｜${STATUS[cur].label}${vs?`・${vs}次`:''}`); });
+    path.addEventListener('mousemove', (e)=> moveTip(e));
+    path.addEventListener('mouseout', ()=>{ path.classList.remove('active'); hideTip(); });
+    path.addEventListener('click', (e)=>{
+      if(!pid) return;
+      if(e.altKey){
+        const next = ((STATE[pid]?.status ?? 0) + 1) % STATUS.length;
+        onChange(pid,'status',next);
+        updateSvgPref(pid);
+        // 即時更新 Tooltip 文字為最新狀態
+        { const cur = +(STATE[pid]?.status || 0); const vs = +(STATE[pid]?.visits || 0); showTip(`${nameJa}｜${STATUS[cur].label}${vs?`・${vs}次`:''}`); }
+        if(rowRefs[pid]) rowRefs[pid].status.value = String(next);
+      }else{
+        const row = rowRefs[pid]?.row; if(row){ row.scrollIntoView({behavior:'smooth', block:'center'}); row.classList.add('flash'); setTimeout(()=>row.classList.remove('flash'),1000); }
+      }
+    });
+
+    g.appendChild(path);
+  });
+}
+
+function updateSvgPref(pid){
+  const el = document.querySelector(`.pref[data-pid="${pid}"]`); if(!el) return;
+  const st = STATE[pid]?.status ?? 0;
+  el.style.fill = COLOR[st] || '#ddd';
+}
+function updateSvgChoropleth(){ PREFS.forEach(p=>updateSvgPref(p.id)); }
+
+// Tooltip
+let tipEl=null; function ensureTip(){ if(!tipEl){ tipEl=document.createElement('div'); tipEl.className='map-tip'; tipEl.style.display='none'; document.querySelector('#svgWrap').appendChild(tipEl);} }
+function showTip(html){ ensureTip(); tipEl.innerHTML=html; tipEl.style.display='block'; }
+function moveTip(e){ if(!tipEl) return; const wrapRect = document.querySelector('#svgWrap').getBoundingClientRect(); const x=e.clientX-wrapRect.left+12; const y=e.clientY-wrapRect.top+12; tipEl.style.left=x+'px'; tipEl.style.top=y+'px'; }
+function hideTip(){ if(tipEl){ tipEl.style.display='none'; } }
+// 產生目前滑入縣的即時文字（避免快取舊值）
+function tipText(pid, nameJa){
+  const cur = pid ? (+((STATE[pid]?.status) || 0)) : 0;
+  const vs = pid ? (+((STATE[pid]?.visits) || 0)) : 0;
+  return `${nameJa}｜${STATUS[cur].label}${vs?`・${vs}次`:''}`;
+}
+
+async function loadGeoJSONWithFallback(urls){
+  let lastErr=null;
+  for(const url of urls){
+    try{
+      const res = await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status);
+      const gj = await res.json(); if(!gj || !gj.features) throw new Error('Invalid GeoJSON');
+      return gj;
+    }catch(e){ lastErr=e; }
+  }
+  throw lastErr || new Error('無法載入 GeoJSON');
+}
+
+// 新版：本島放大 + 沖繩 inset（左上角）
+function buildSvgMap2(geojson){
+  var svg = document.getElementById('jpSvg');
+  var featsAll = geojson.features || [];
+  // 分離出沖繩，主體只用本島計算視域，讓本島可放大
+  var parts = {main:[], okinawa:[]};
+  for(var i=0;i<featsAll.length;i++){
+    var f = featsAll[i];
+    var nameJa = String(getFeatureNameJa(f.properties)||"");
+    var key = nameJa.split(' ').join('');
+    var base = nameJa.replace('都','').replace('道','').replace('府','').replace('県','');
+    var pid = nameToId[key] || nameToId[base] || null;
+    (pid==='okinawa' ? parts.okinawa : parts.main).push({f:f, pid:pid, nameJa:nameJa});
+  }
+  var mapMain = parts.main.map(function(x){return x.f;});
+  var mapOki  = parts.okinawa.map(function(x){return x.f;});
+  var bboxMain = computeBBox(mapMain);
+  // 針對主島視域做裁剪，排除極端離島（如小笠原、南鳥島等）以獲得更居中的主體
+  function clampBBox(b){
+    var minLon=Math.max(b[0],128), minLat=Math.max(b[1],29), maxLon=Math.min(b[2],147), maxLat=Math.min(b[3],46);
+    // 若 clamp 造成上下界顛倒，退回原 bbox
+    if(minLon>=maxLon || minLat>=maxLat) return b;
+    return [minLon,minLat,maxLon,maxLat];
+  }
+  var bboxMainAdj = clampBBox(bboxMain);
+  var bboxOki  = mapOki.length ? computeBBox(mapOki) : null;
+
+  // 先清空畫布
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+  // 主群組
+  var gMain = document.createElementNS('http://www.w3.org/2000/svg','g');
+  svg.appendChild(gMain);
+  // 置中主島：保留內邊距，避免貼邊且為圖例/ inset 留白
+  var layout={svgW:1000,svgH:520,mainW:920,mainH:500,mainX:70,mainY:30};
+  gMain.setAttribute('transform','translate('+layout.mainX+','+layout.mainY+')');
+
+  // 沖繩 inset 群組（左上角，略離邊緣）
+  var gInset=null; var inset={w:170,h:130,x:48,y:36};
+  if(bboxOki){
+    gInset = document.createElementNS('http://www.w3.org/2000/svg','g');
+    gInset.setAttribute('transform', 'translate('+inset.x+','+inset.y+')');
+    // 背板
+    var bg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bg.setAttribute('x','-6'); bg.setAttribute('y','-24'); bg.setAttribute('rx','10'); bg.setAttribute('ry','10');
+    bg.setAttribute('width', String(inset.w+12)); bg.setAttribute('height', String(inset.h+30));
+    bg.setAttribute('fill','#fff'); bg.setAttribute('stroke','#e5e7eb');
+    gInset.appendChild(bg);
+    // 標籤
+    var label = document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x','4'); label.setAttribute('y','-6'); label.setAttribute('fill','#6b7280'); label.setAttribute('font-size','14');
+    label.textContent = '沖繩'; gInset.appendChild(label);
+    svg.appendChild(gInset);
+  }
+
+  function drawOne(obj){
+    var f=obj.f, pid=obj.pid, nameJa=obj.nameJa;
+    var tgt = (pid==='okinawa' && gInset) ? gInset : gMain;
+    var bboxUse = (pid==='okinawa' && bboxOki) ? bboxOki : bboxMainAdj;
+    var wUse = (pid==='okinawa' && gInset) ? inset.w : layout.mainW;
+    var hUse = (pid==='okinawa' && gInset) ? inset.h : layout.mainH;
+    var path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.classList.add('pref'); if(pid) path.dataset.pid = pid;
+    var d="";
+    if(f.geometry && f.geometry.type==='Polygon'){
+      d = ringsToPathScaled(f.geometry.coordinates, bboxUse, wUse, hUse);
+    }else if(f.geometry && f.geometry.type==='MultiPolygon'){
+      for(var j=0;j<f.geometry.coordinates.length;j++){
+        d += ringsToPathScaled(f.geometry.coordinates[j], bboxUse, wUse, hUse);
+      }
+    }
+    path.setAttribute('d', d);
+    var st = pid ? (STATE[pid]&&STATE[pid].status || 0) : 0;
+    path.style.fill = COLOR[st] || '#ddd';
+    // 互動與舊版一致
+    path.addEventListener('mouseover', function(){ path.classList.add('active'); var cur = pid ? (+((STATE[pid]&&STATE[pid].status) || 0)) : 0; var vs = pid ? (+((STATE[pid]&&STATE[pid].visits) || 0)) : 0; showTip(nameJa+'｜'+STATUS[cur].label+(vs?('・'+vs+'次'):'')); });
+    path.addEventListener('mousemove', function(e){ moveTip(e); });
+    path.addEventListener('mouseout', function(){ path.classList.remove('active'); hideTip(); });
+    path.addEventListener('click', function(e){
+      if(!pid) return;
+      if(e.altKey){
+        var next = (((STATE[pid]&&STATE[pid].status) || 0) + 1) % STATUS.length;
+        onChange(pid,'status',next); updateSvgPref(pid);
+        var cur = +((STATE[pid]&&STATE[pid].status) || 0); var vs = +((STATE[pid]&&STATE[pid].visits) || 0); showTip(nameJa+'｜'+STATUS[cur].label+(vs?('・'+vs+'次'):''));
+        if(rowRefs[pid]) rowRefs[pid].status.value = String(next);
+      }else{
+        var row = rowRefs[pid]&&rowRefs[pid].row; if(row){ row.scrollIntoView({behavior:'smooth', block:'center'}); row.classList.add('flash'); setTimeout(function(){row.classList.remove('flash');},1000); }
+      }
+    });
+    tgt.appendChild(path);
+  }
+
+  for(var a=0;a<parts.main.length;a++) drawOne(parts.main[a]);
+  for(var b=0;b<parts.okinawa.length;b++) drawOne(parts.okinawa[b]);
+}
+
+/* ------------ 初始化 ------------ */
+function pct(n){ return (Math.round(n*1000)/10)+"%"; }
+function init(){
+  renderTileMap();
+  computeStats();
+  applyFilter("");
+  // 載入 GeoJSON → 轉 SVG
+  loadGeoJSONWithFallback(GEOJSON_SOURCES)
+    .then(gj=>{ (window.buildSvgMap2||buildSvgMap)(gj); })
+    .catch(e=>{
+      console.warn('邊界載入失敗：',e);
+      const tip=document.createElement('div'); tip.className='small muted'; tip.style.marginTop='8px';
+      tip.textContent='⚠️ 無法載入縣界資料（網路或來源問題）。'; document.querySelector('#svgWrap').after(tip);
+    });
+}
+init();
+</script>
+</body>
+</html>
