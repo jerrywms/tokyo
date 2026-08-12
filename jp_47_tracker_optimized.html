@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#eef6f8">
+<title>日本 47 都道府縣・征服統計</title>
+<style>
+  :root{
+    --bg:#f3f7f8;--panel:#fff;--ink:#17212b;--muted:#6b7785;--line:#dfe7ea;
+    --ocean:#eaf5f7;--brand:#2563eb;--green:#10b981;--danger:#ef4444;--warn:#f59e0b;
+    --s0:#f0f0f0;--s1:#60a5fa;--s2:#34d399;--s3:#f6e05e;--s4:#ed8936;--s5:#ef4444;
+    --shadow:0 18px 55px rgba(29,55,68,.09);--soft-shadow:0 6px 22px rgba(29,55,68,.07);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);background:radial-gradient(circle at 10% 0,rgba(96,165,250,.09),transparent 30rem),radial-gradient(circle at 92% 5%,rgba(52,211,153,.08),transparent 28rem),var(--bg);font-family:"Microsoft JhengHei UI","Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.5}
+  button,input,select{font:inherit;color:inherit}
+  button:focus-visible,input:focus-visible,select:focus-visible,.pref:focus-visible{outline:3px solid rgba(37,99,235,.25);outline-offset:2px}
+  .shell{width:min(1320px,calc(100% - 32px));margin-inline:auto}
+  header{position:sticky;top:0;z-index:30;border-bottom:1px solid rgba(223,231,234,.84);background:rgba(243,247,248,.88);backdrop-filter:blur(18px) saturate(150%)}
+  .topbar{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .brand-mark{width:39px;height:39px;display:grid;place-items:center;border:1px solid var(--line);border-radius:13px;background:linear-gradient(145deg,#fff,#e9f4f7);box-shadow:var(--soft-shadow);font-size:20px}
+  h1{margin:0;font-size:17px;line-height:1.2;letter-spacing:.02em}.brand p{margin:3px 0 0;color:var(--muted);font-size:11px}
+  .save{display:flex;align-items:center;gap:8px;white-space:nowrap;color:var(--muted);font-size:12px}.save i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(16,185,129,.12)}.save.saving i{background:var(--warn);box-shadow:0 0 0 4px rgba(245,158,11,.13)}
+  main{padding:22px 0 44px}.card{border:1px solid rgba(223,231,234,.95);border-radius:21px;background:rgba(255,255,255,.94);box-shadow:var(--shadow)}
+
+  /* 主地圖 */
+  .map-card{overflow:hidden}.map-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;border-bottom:1px solid var(--line)}
+  .eyebrow{margin:0 0 4px;color:#478090;font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.map-head h2{margin:0;font-size:20px;letter-spacing:.01em}.map-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.map-count{padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#f6fafb;color:var(--muted);font-size:11px;white-space:nowrap}
+  .map-stage{position:relative;margin:14px;border:1px solid #d7e6e9;border-radius:17px;overflow:hidden;background:linear-gradient(160deg,#f6fbfc 0%,var(--ocean) 62%,#e5f1f4 100%);min-height:560px}
+  .map-stage::before{content:"";position:absolute;inset:0;opacity:.38;background-image:radial-gradient(circle at 1px 1px,rgba(80,130,145,.16) 1px,transparent 0);background-size:22px 22px;mask-image:linear-gradient(to bottom,black,transparent 80%);pointer-events:none}
+  #jpSvg{position:relative;z-index:1;display:block;width:100%;height:auto;min-height:560px}
+  .pref{fill:var(--s0);stroke:#fff;stroke-width:.85;vector-effect:non-scaling-stroke;cursor:pointer;transition:filter .15s,opacity .18s,stroke-width .15s;filter:drop-shadow(0 1px 1px rgba(30,60,72,.13))}.pref:hover,.pref.active{filter:brightness(.97) drop-shadow(0 3px 5px rgba(30,60,72,.24));stroke:#273847;stroke-width:1.35}.pref.inset-pref{stroke-width:.42}.pref.inset-pref:hover,.pref.inset-pref.active{stroke-width:.8}.pref.dim{opacity:.14}
+  .map-wordmark{font-size:52px;font-weight:900;letter-spacing:.16em;fill:rgba(68,111,124,.07);pointer-events:none}.region-label{font-size:10px;font-weight:900;letter-spacing:.08em;text-anchor:middle;dominant-baseline:middle;fill:rgba(34,70,82,.68);stroke:rgba(255,255,255,.94);stroke-width:3.5;stroke-linejoin:round;paint-order:stroke fill;pointer-events:none}.inset-panel{fill:rgba(255,255,255,.72);stroke:rgba(114,153,164,.4);stroke-width:1}.inset-title{font-size:12px;font-weight:900;fill:#496b77;stroke:rgba(255,255,255,.9);stroke-width:3;paint-order:stroke fill}
+  .map-loading{position:absolute;inset:0;z-index:3;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:12px}.map-loading[hidden]{display:none}.spinner{width:30px;height:30px;margin:0 auto 10px;border:3px solid rgba(111,145,154,.22);border-top-color:#478090;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{rotate:360deg}}
+  .map-tip{position:absolute;z-index:6;pointer-events:none;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.96);box-shadow:var(--soft-shadow);font-size:12px}
+  .map-editor{position:absolute;z-index:5;left:18px;bottom:18px;width:min(420px,calc(100% - 36px));padding:14px;border:1px solid rgba(207,221,225,.95);border-radius:15px;background:rgba(255,255,255,.94);box-shadow:0 14px 38px rgba(29,55,68,.14);backdrop-filter:blur(14px);transition:.18s}.map-editor[hidden]{display:none}.editor-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.editor-top strong{font-size:15px}.editor-top small{display:block;color:var(--muted);font-size:10px}.close{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:18px}.palette{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}.state-btn{min-height:39px;padding:6px 4px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-size:10px;font-weight:800}.state-btn::before{content:"";display:block;width:12px;height:12px;margin:0 auto 3px;border:1px solid rgba(23,33,43,.15);border-radius:4px;background:var(--c)}.state-btn:hover,.state-btn.active{border-color:#243746;box-shadow:inset 0 0 0 1px #243746}
+  .legend{display:flex;flex-wrap:wrap;gap:7px;padding:0 18px 16px}.legend button{display:flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);cursor:pointer;font-size:10px}.legend button:hover,.legend button.active{border-color:#9aabb1;color:var(--ink);background:#f7fafb}.swatch{width:11px;height:11px;border:1px solid rgba(23,33,43,.14);border-radius:4px;background:var(--c)}
+
+  /* 統計 */
+  .overview{display:grid;grid-template-columns:minmax(300px,1.12fr) minmax(0,1.88fr);gap:14px;margin-top:14px}.score{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;min-height:146px;padding:22px}.score::after{content:"";position:absolute;right:-54px;top:-74px;width:170px;height:170px;border-radius:50%;background:rgba(246,224,94,.20)}.score-kicker{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.12em}.score-line{display:flex;align-items:baseline;gap:7px;margin-top:5px}.score-value{font-size:52px;line-height:.95;font-weight:900;letter-spacing:-.05em;background:linear-gradient(95deg,var(--danger),var(--warn) 62%,#eab308);background-clip:text;color:transparent}.score-max{color:var(--muted);font-size:13px;font-weight:700}.score-copy{margin:10px 0 0;color:var(--muted);font-size:11px}.ring{--p:0deg;position:relative;z-index:1;width:93px;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--brand),var(--green) var(--p),#edf1f3 0)}.ring::before{content:"";position:absolute;inset:9px;border-radius:inherit;background:#fff}.ring span{position:relative;text-align:center;font-size:18px;font-weight:900}.ring small{display:block;color:var(--muted);font-size:9px;font-weight:650}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}.stat{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fafcfc}.stat-label{min-height:33px;color:var(--muted);font-size:11px;font-weight:700}.stat-value{margin-top:3px;font-size:22px;font-weight:900}.progress{height:5px;margin-top:10px;border-radius:999px;overflow:hidden;background:#e8edef}.progress i{display:block;width:var(--w,0%);height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--brand),var(--green));transition:width .3s}
+
+  /* 合併後的方塊編輯 */
+  .tracker-card{margin-top:14px;overflow:hidden}.tracker-head{padding:18px 20px 14px}.tracker-head h2{margin:0;font-size:18px}.tracker-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.controls{display:grid;grid-template-columns:minmax(240px,1.6fr) repeat(2,minmax(140px,.55fr)) auto;gap:9px;padding:0 16px 16px;border-bottom:1px solid var(--line)}.search-wrap{position:relative}.search-wrap::before{content:"⌕";position:absolute;left:13px;top:6px;color:#95a2aa;font-size:20px}.control{width:100%;min-height:41px;padding:8px 11px;border:1px solid var(--line);border-radius:11px;background:#fff}.search-wrap .control{padding-left:39px}.actions{display:flex;gap:7px}.btn{min-height:41px;padding:8px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;font-size:12px;font-weight:800;white-space:nowrap}.btn:hover{border-color:#b8c5ca;background:#f8fafb}.btn.primary{border-color:var(--ink);background:var(--ink);color:#fff}.btn.danger{width:41px;padding:0;color:#b91c1c}.hidden{display:none!important}
+  .regions{display:grid;gap:12px;padding:16px}.region{padding:13px;border:1px solid var(--line);border-radius:15px;background:#fafcfc}.region-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:var(--muted);font-size:11px}.region-head strong{color:var(--ink);font-size:12px}.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:8px}.tile{position:relative;min-height:112px;padding:11px;border:1px solid rgba(23,33,43,.12);border-radius:12px;background:color-mix(in srgb,var(--tile) 72%,white);text-align:left;transition:transform .12s,box-shadow .15s}.tile:hover{transform:translateY(-2px);box-shadow:var(--soft-shadow)}.tile[data-status="5"]{color:#fff}.tile-name{font-size:14px;font-weight:900}.tile-sub{display:block;margin-top:1px;font-size:9px;opacity:.66;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tile-status{display:inline-block;margin-top:7px;padding:2px 6px;border:1px solid rgba(23,33,43,.10);border-radius:999px;background:rgba(255,255,255,.66);color:#384752;font-size:9px;font-weight:800}.mini-palette{position:absolute;left:10px;right:10px;bottom:9px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.mini-state{height:18px;padding:0;border:1px solid rgba(23,33,43,.13);border-radius:5px;background:var(--c);cursor:pointer;opacity:.66}.mini-state:hover,.mini-state.active{opacity:1;outline:2px solid rgba(23,33,43,.68);outline-offset:1px}.empty{display:none;padding:50px 20px;text-align:center;color:var(--muted);font-size:12px}
+  .foot{padding:16px 0 0;text-align:center;color:var(--muted);font-size:10px}.toast{position:fixed;left:50%;bottom:22px;z-index:60;translate:-50% 16px;padding:10px 14px;border-radius:11px;background:#17212b;color:#fff;box-shadow:var(--shadow);font-size:11px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;translate:-50% 0}
+
+  @media(max-width:900px){.map-stage,#jpSvg{min-height:440px}.overview{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.search-wrap{grid-column:1/-1}.actions{justify-content:flex-end}.tiles{grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}}
+  @media(max-width:620px){.shell{width:min(100% - 20px,1320px)}.brand p,.save span{display:none}main{padding-top:10px}.map-head{padding:14px}.map-head h2{font-size:17px}.map-head p{max-width:250px}.map-stage{margin:8px;min-height:335px}.map-stage::before{background-size:17px 17px}#jpSvg{min-height:335px}.legend{padding:0 10px 10px}.legend button{padding:4px 7px}.map-editor{left:9px;bottom:9px;width:calc(100% - 18px);padding:10px}.palette{gap:4px}.state-btn{min-height:34px;font-size:0}.state-btn::before{width:15px;height:15px;margin:0 auto}.overview{margin-top:10px}.score{min-height:132px;padding:18px}.score-value{font-size:44px}.ring{width:82px}.stats{padding:9px;gap:7px}.stat{padding:10px}.stat-value{font-size:18px}.controls{grid-template-columns:1fr;padding:0 10px 10px}.search-wrap{grid-column:auto}.actions{display:grid;grid-template-columns:1fr auto auto}.regions{padding:10px}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile{min-height:108px}.region{padding:10px}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header><div class="shell topbar"><div class="brand"><div class="brand-mark">🗾</div><div><h1>日本 47 都道府縣・征服統計</h1><p>每一段足跡，都算進自己的日本版圖</p></div></div><div id="save" class="save" role="status"><i></i><span>已儲存於此裝置</span></div></div></header>
+<main class="shell">
+  <section class="card map-card">
+    <div class="map-head"><div><p class="eyebrow">Japan Footprint Map</p><h2>日本足跡地圖</h2><p>點選都道府縣即可直接更新狀態；顏色會即時反映你的足跡。</p></div><span id="mapCount" class="map-count">顯示 47 個</span></div>
+    <div id="mapStage" class="map-stage">
+      <svg id="jpSvg" viewBox="0 0 1100 600" preserveAspectRatio="xMidYMid meet" aria-label="日本都道府縣足跡地圖"></svg>
+      <div id="mapLoading" class="map-loading"><div><div class="spinner"></div>正在準備縣界地圖…</div></div>
+      <div id="mapEditor" class="map-editor" hidden><div class="editor-top"><div><strong id="editorName"></strong><small id="editorSub"></small></div><button id="editorClose" class="close" type="button" aria-label="關閉">×</button></div><div id="editorPalette" class="palette"></div></div>
+    </div>
+    <div id="legend" class="legend" aria-label="狀態圖例"></div>
+  </section>
+
+  <section class="overview">
+    <article class="card score"><div><div class="score-kicker">🏆 制縣總分</div><div class="score-line"><strong id="score" class="score-value">0</strong><span class="score-max">／235 分</span></div><p id="scoreCopy" class="score-copy">從第一個足跡開始，慢慢填滿日本。</p></div><div id="ring" class="ring"><span><b id="scorePct">0%</b><small>完成度</small></span></div></article>
+    <article class="card stats"><div class="stat"><div class="stat-label">已踏足<br>含路過</div><div id="touched" class="stat-value">0 / 47</div><div class="progress"><i id="touchedBar"></i></div></div><div class="stat"><div class="stat-label">到訪<br>遊玩以上</div><div id="visited" class="stat-value">0 / 47</div><div class="progress"><i id="visitedBar"></i></div></div><div class="stat"><div class="stat-label">深度／長住<br>住宿以上</div><div id="deep" class="stat-value">0 / 47</div><div class="progress"><i id="deepBar"></i></div></div></article>
+  </section>
+
+  <section class="card tracker-card">
+    <div class="tracker-head"><h2>都道府縣一覽</h2><p>方塊與編輯功能已合併；直接點選每張卡片下方的顏色即可更新。</p></div>
+    <div class="controls"><label class="search-wrap"><span class="hidden">搜尋</span><input id="search" class="control" type="search" placeholder="搜尋中文、日文或羅馬拼音（按 /）"></label><select id="statusFilter" class="control" aria-label="依狀態篩選"><option value="all">全部狀態</option></select><select id="regionFilter" class="control" aria-label="依區域篩選"><option value="all">全部區域</option></select><div class="actions"><button id="export" class="btn primary" type="button">匯出備份</button><label class="btn" for="import">匯入</label><input id="import" class="hidden" type="file" accept=".json,application/json"><button id="reset" class="btn danger" type="button" aria-label="重置全部資料">⌫</button></div></div>
+    <div id="regions" class="regions"></div><div id="empty" class="empty">沒有符合目前條件的都道府縣。</div>
+  </section>
+  <div class="foot">資料僅保存在此瀏覽器；舊版 JSON 備份仍可正常匯入。</div>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+const COLORS=["#f0f0f0","#60a5fa","#34d399","#f6e05e","#ed8936","#ef4444"];
+const STATUS=[{k:0,label:"沒去過"},{k:1,label:"路過"},{k:2,label:"接地（轉乘）"},{k:3,label:"遊玩過"},{k:4,label:"住宿過"},{k:5,label:"居住過"}];
+const REGIONS=["北海道","東北","關東","中部","近畿","中國","四國","九州・沖繩"];
+const PREFS=[
+["hokkaido","北海道","北海道","Hokkaidō","北海道"],
+["aomori","青森縣","青森県","Aomori","東北"],["iwate","岩手縣","岩手県","Iwate","東北"],["miyagi","宮城縣","宮城県","Miyagi","東北"],["akita","秋田縣","秋田県","Akita","東北"],["yamagata","山形縣","山形県","Yamagata","東北"],["fukushima","福島縣","福島県","Fukushima","東北"],
+["ibaraki","茨城縣","茨城県","Ibaraki","關東"],["tochigi","栃木縣","栃木県","Tochigi","關東"],["gunma","群馬縣","群馬県","Gunma","關東"],["saitama","埼玉縣","埼玉県","Saitama","關東"],["chiba","千葉縣","千葉県","Chiba","關東"],["tokyo","東京都","東京都","Tōkyō","關東"],["kanagawa","神奈川縣","神奈川県","Kanagawa","關東"],
+["niigata","新潟縣","新潟県","Niigata","中部"],["toyama","富山縣","富山県","Toyama","中部"],["ishikawa","石川縣","石川県","Ishikawa","中部"],["fukui","福井縣","福井県","Fukui","中部"],["yamanashi","山梨縣","山梨県","Yamanashi","中部"],["nagano","長野縣","長野県","Nagano","中部"],["gifu","岐阜縣","岐阜県","Gifu","中部"],["shizuoka","靜岡縣","静岡県","Shizuoka","中部"],["aichi","愛知縣","愛知県","Aichi","中部"],["mie","三重縣","三重県","Mie","中部"],
+["shiga","滋賀縣","滋賀県","Shiga","近畿"],["kyoto","京都府","京都府","Kyōto","近畿"],["osaka","大阪府","大阪府","Ōsaka","近畿"],["hyogo","兵庫縣","兵庫県","Hyōgo","近畿"],["nara","奈良縣","奈良県","Nara","近畿"],["wakayama","和歌山縣","和歌山県","Wakayama","近畿"],
+["tottori","鳥取縣","鳥取県","Tottori","中國"],["shimane","島根縣","島根県","Shimane","中國"],["okayama","岡山縣","岡山県","Okayama","中國"],["hiroshima","廣島縣","広島県","Hiroshima","中國"],["yamaguchi","山口縣","山口県","Yamaguchi","中國"],
+["tokushima","德島縣","徳島県","Tokushima","四國"],["kagawa","香川縣","香川県","Kagawa","四國"],["ehime","愛媛縣","愛媛県","Ehime","四國"],["kochi","高知縣","高知県","Kōchi","四國"],
+["fukuoka","福岡縣","福岡県","Fukuoka","九州・沖繩"],["saga","佐賀縣","佐賀県","Saga","九州・沖繩"],["nagasaki","長崎縣","長崎県","Nagasaki","九州・沖繩"],["kumamoto","熊本縣","熊本県","Kumamoto","九州・沖繩"],["oita","大分縣","大分県","Ōita","九州・沖繩"],["miyazaki","宮崎縣","宮崎県","Miyazaki","九州・沖繩"],["kagoshima","鹿兒島縣","鹿児島県","Kagoshima","九州・沖繩"],["okinawa","沖繩縣","沖縄県","Okinawa","九州・沖繩"]
+].map(([id,zh,jp,romaji,region])=>({id,zh,jp,romaji,region}));
+const KEY="jp47-tracker-v2",OLD="jp47-tracker-v1";
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const blank=()=>Object.fromEntries(PREFS.map(p=>[p.id,{status:0,visits:0,note:""}]));
+function normalize(o){const n=blank();PREFS.forEach(p=>{const x=o?.[p.id]||{};n[p.id]={status:Math.min(5,Math.max(0,+x.status||0)),visits:Math.max(0,+x.visits||0),note:String(x.note||"")}});return n}
+function migrate(o){const n=normalize(o);PREFS.forEach(p=>{if(n[p.id].status>=2)n[p.id].status=Math.min(5,n[p.id].status+1)});return n}
+function load(){try{const v=localStorage.getItem(KEY);if(v)return normalize(JSON.parse(v));const old=localStorage.getItem(OLD);if(old){const n=migrate(JSON.parse(old));localStorage.setItem(KEY,JSON.stringify(n));return n}}catch{}return blank()}
+let STATE=load(),selected=null,saveTimer=null,toastTimer=null;
+function persist(){const el=$("#save");el.classList.add("saving");el.lastElementChild.textContent="儲存中…";clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(STATE));el.classList.remove("saving");el.lastElementChild.textContent="已儲存於此裝置"}catch{el.lastElementChild.textContent="無法儲存"}},120)}
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2300)}
+function setStatus(id,status){STATE[id].status=+status;persist();sync(id);stats();filter();if(selected===id)syncEditor()}
+function short(n){return n.replace(/[縣府都]$/,"")}
+function buildUI(){
+ STATUS.forEach(s=>$("#statusFilter").add(new Option(`${s.label}・${s.k} 分`,s.k)));REGIONS.forEach(r=>$("#regionFilter").add(new Option(r,r)));
+ $("#legend").innerHTML=STATUS.map(s=>`<button type="button" data-status="${s.k}"><i class="swatch" style="--c:${COLORS[s.k]}"></i>${s.label}・${s.k}</button>`).join("");
+ $("#editorPalette").innerHTML=STATUS.map(s=>`<button type="button" class="state-btn" data-status="${s.k}" style="--c:${COLORS[s.k]}">${s.label}</button>`).join("");
+ const regions=$("#regions");REGIONS.forEach(region=>{const prefs=PREFS.filter(p=>p.region===region),box=document.createElement("section");box.className="region";box.dataset.region=region;box.innerHTML=`<div class="region-head"><strong>${region}</strong><span>${prefs.length} 都道府縣</span></div><div class="tiles"></div>`;const grid=$(".tiles",box);prefs.forEach(p=>{const tile=document.createElement("article");tile.className="tile";tile.dataset.pid=p.id;tile.innerHTML=`<div class="tile-name">${short(p.zh)}</div><small class="tile-sub">${p.jp}・${p.romaji}</small><span class="tile-status"></span><div class="mini-palette">${STATUS.map(s=>`<button type="button" class="mini-state" data-status="${s.k}" style="--c:${COLORS[s.k]}" aria-label="${p.zh}：${s.label}" title="${s.label}"></button>`).join("")}</div>`;grid.appendChild(tile);$$('.mini-state',tile).forEach(b=>b.addEventListener('click',()=>setStatus(p.id,b.dataset.status)))});regions.appendChild(box)});
+ $$('#legend button').forEach(b=>b.addEventListener('click',()=>{const f=$('#statusFilter');f.value=f.value===b.dataset.status?'all':b.dataset.status;filter()}));$$('.state-btn').forEach(b=>b.addEventListener('click',()=>setStatus(selected,b.dataset.status)));
+}
+function sync(id){const s=STATE[id],tile=$(`.tile[data-pid="${id}"]`);if(tile){tile.dataset.status=s.status;tile.style.setProperty('--tile',COLORS[s.status]);$('.tile-status',tile).textContent=`${STATUS[s.status].label}・${s.status} 分`;$$('.mini-state',tile).forEach(b=>b.classList.toggle('active',+b.dataset.status===s.status))}$$(`.pref[data-pid="${id}"]`).forEach(p=>{p.style.fill=COLORS[s.status];p.setAttribute('aria-label',`${PREFS.find(x=>x.id===id).zh}，${STATUS[s.status].label}`)})}
+function stats(){let t=0,v=0,d=0,score=0;PREFS.forEach(p=>{const s=STATE[p.id].status;if(s>=1)t++;if(s>=3)v++;if(s>=4)d++;score+=s});$('#score').textContent=score;$('#touched').textContent=`${t} / 47`;$('#visited').textContent=`${v} / 47`;$('#deep').textContent=`${d} / 47`;$('#touchedBar').style.setProperty('--w',`${t/47*100}%`);$('#visitedBar').style.setProperty('--w',`${v/47*100}%`);$('#deepBar').style.setProperty('--w',`${d/47*100}%`);const pc=Math.round(score/235*100);$('#scorePct').textContent=`${pc}%`;$('#ring').style.setProperty('--p',`${score/235*360}deg`);$('#scoreCopy').textContent=score===235?'47 都道府縣全制霸。':t?`已在 ${t} 個都道府縣留下足跡，還有 ${47-t} 個等待探索。`:'從第一個足跡開始，慢慢填滿日本。'}
+function matches(p){const q=$('#search').value.trim().toLowerCase(),s=$('#statusFilter').value,r=$('#regionFilter').value,h=`${p.zh} ${p.jp} ${p.romaji}`.toLowerCase();return(!q||h.includes(q))&&(s==='all'||STATE[p.id].status===+s)&&(r==='all'||p.region===r)}
+function filter(){const ids=new Set(PREFS.filter(matches).map(p=>p.id));PREFS.forEach(p=>{$(`.tile[data-pid="${p.id}"]`)?.classList.toggle('hidden',!ids.has(p.id));$$(`.pref[data-pid="${p.id}"]`).forEach(x=>x.classList.toggle('dim',!ids.has(p.id)))});$$('.region').forEach(r=>r.classList.toggle('hidden',!$('.tile:not(.hidden)',r)));$('#mapCount').textContent=`顯示 ${ids.size} 個`;$('#empty').style.display=ids.size?'none':'block';$$('#legend button').forEach(b=>b.classList.toggle('active',$('#statusFilter').value===b.dataset.status))}
+function openEditor(id){selected=id;syncEditor();$('#mapEditor').hidden=false}
+function syncEditor(){const p=PREFS.find(x=>x.id===selected);if(!p)return;$('#editorName').textContent=p.zh;$('#editorSub').textContent=`${p.jp}・${p.romaji}・${p.region}`;$$('.state-btn').forEach(b=>b.classList.toggle('active',+b.dataset.status===STATE[selected].status))}
+function controls(){['search','statusFilter','regionFilter'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',filter));document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search').focus()}});$('#editorClose').addEventListener('click',()=>$('#mapEditor').hidden=true);$('#export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({schema:'jp47-tracker',version:2,exportedAt:new Date().toISOString(),data:STATE},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`jp47-tracker-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),500);toast('備份已匯出')});$('#import').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const p=JSON.parse(await file.text());if(p?.schema==='jp47-tracker'&&p?.version===2&&p?.data)STATE=normalize(p.data);else STATE=confirm('這是沒有版本標記的舊備份。\n\n按「確定」以最舊版遷移；按「取消」保留目前分數。')?migrate(p):normalize(p);persist();PREFS.forEach(x=>sync(x.id));stats();filter();toast('備份匯入成功')}catch{alert('匯入失敗，請確認 JSON 格式。')}finally{e.target.value=''}});$('#reset').addEventListener('click',()=>{if(!confirm('確定要重置全部資料嗎？建議先匯出備份。'))return;STATE=blank();persist();PREFS.forEach(p=>sync(p.id));stats();filter();$('#mapEditor').hidden=true;toast('已重置全部資料')})}
+const SOURCES=['https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson','https://raw.githubusercontent.com/niiyz/JapanCityGeoJson/master/data/prefectures.geojson','https://raw.githubusercontent.com/code4fukui/jisx0402/master/pref.geojson'];
+function fname(p={}){return p.name_ja||p.nam_ja||p.nam||p.name||p.N03_001||p.PREF||p.prefecture||p.pref||''}
+const nameId=(()=>{const m={};PREFS.forEach(p=>{const alt=p.zh.replace('縣','県').replace('沖繩','沖縄').replace('廣島','広島').replace('德島','徳島').replace('靜岡','静岡').replace('鹿兒島','鹿児島');[p.jp,p.jp.replace(/[都道府県]$/,''),alt,alt.replace(/[都道府県]$/,'')].forEach(k=>m[k]=p.id)});return m})();
+function bbox(fs,limit){let a=180,b=90,c=-180,d=-90;fs.forEach(f=>{const g=f.geometry,polys=g?.type==='Polygon'?[g.coordinates]:g?.type==='MultiPolygon'?g.coordinates:[];polys.forEach(p=>p.forEach(r=>r.forEach(([x,y])=>{a=Math.min(a,x);c=Math.max(c,x);b=Math.min(b,y);d=Math.max(d,y)})))});if(limit){a=Math.max(a,limit[0]);b=Math.max(b,limit[1]);c=Math.min(c,limit[2]);d=Math.min(d,limit[3])}const px=(c-a)*.025,py=(d-b)*.045;return[a-px,b-py,c+px,d+py]}
+function pathData(g,bb,w,h){let d='';const polys=g?.type==='Polygon'?[g.coordinates]:g?.type==='MultiPolygon'?g.coordinates:[];polys.forEach(p=>p.forEach(r=>{r.forEach(([lon,lat],i)=>{const x=(lon-bb[0])/(bb[2]-bb[0])*w,y=(bb[3]-lat)/(bb[3]-bb[1])*h;d+=`${i?'L':'M'}${x.toFixed(2)},${y.toFixed(2)}`});d+='Z'}));return d}
+function ringArea(ring){let area=0;for(let i=0,j=ring.length-1;i<ring.length;j=i++)area+=(ring[j][0]*ring[i][1]-ring[i][0]*ring[j][1]);return Math.abs(area/2)}
+function cleanGeometry(g,id){
+ const polys=g?.type==='Polygon'?[g.coordinates]:g?.type==='MultiPolygon'?g.coordinates:[];
+ if(!polys.length)return g;
+ const ranked=polys.map(p=>({p,area:ringArea(p[0]||[])})).sort((a,b)=>b.area-a.area),largest=ranked[0].area;
+ const kept=id==='okinawa'?[ranked[0].p]:ranked.filter(x=>x.area>=Math.max(.0008,largest*.012)).map(x=>x.p);
+ return{type:'MultiPolygon',coordinates:kept.length?kept:[ranked[0].p]};
+}
+async function geo(){if('caches'in window){try{const c=await caches.open('jp47-geo-v1'),r=await c.match('pref');if(r)return r.json()}catch{}}let last;for(const u of SOURCES)try{const r=await fetch(u);if(!r.ok)throw Error(r.status);const g=await r.json();if(!g.features)throw Error('invalid');if('caches'in window)try{(await caches.open('jp47-geo-v1')).put('pref',new Response(JSON.stringify(g),{headers:{'Content-Type':'application/json'}}))}catch{}return g}catch(e){last=e}throw last}
+function draw(gj){
+ const svg=$('#jpSvg'),ns='http://www.w3.org/2000/svg';
+ const items=gj.features.map(f=>{const n=String(fname(f.properties)).replace(/\s/g,''),id=nameId[n]||nameId[n.replace(/[都道府県]$/,'')];return{f:id?{...f,geometry:cleanGeometry(f.geometry,id)}:f,id,n}}).filter(x=>x.id);
+ const main=items.filter(x=>x.id!=='okinawa'),oki=items.filter(x=>x.id==='okinawa'),bm=bbox(main.map(x=>x.f),[128,29,147,46]),bo=oki.length?bbox(oki.map(x=>x.f)):null;
+ svg.innerHTML=`<defs><filter id="landShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#234653" flood-opacity=".13"/></filter></defs><text x="515" y="330" class="map-wordmark">日本列島</text>`;
+ const gm=document.createElementNS(ns,'g');gm.setAttribute('transform','translate(100,38)');gm.setAttribute('filter','url(#landShadow)');svg.appendChild(gm);
+ let go;if(bo){go=document.createElementNS(ns,'g');go.setAttribute('transform','translate(28,55)');go.innerHTML=`<rect class="inset-panel" x="-8" y="-28" width="200" height="160" rx="16"/>`;svg.appendChild(go)}
+ function one(x){const is=x.id==='okinawa'&&go,p=document.createElementNS(ns,'path');p.classList.add('pref');if(is)p.classList.add('inset-pref');p.dataset.pid=x.id;p.setAttribute('tabindex','0');p.setAttribute('role','button');p.setAttribute('d',pathData(x.f.geometry,is?bo:bm,is?180:930,is?125:520));p.style.fill=COLORS[STATE[x.id].status];p.addEventListener('pointerenter',()=>{p.classList.add('active');tipShow(x.id)});p.addEventListener('pointermove',tipMove);p.addEventListener('pointerleave',()=>{p.classList.remove('active');tipHide()});p.addEventListener('click',()=>openEditor(x.id));p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openEditor(x.id)}});(is?go:gm).appendChild(p)}
+ main.forEach(one);oki.forEach(one);
+ if(go)go.insertAdjacentHTML('beforeend','<text class="inset-title" x="3" y="-8">沖繩本島</text>');
+ const labels=document.createElementNS(ns,'g');labels.setAttribute('aria-hidden','true');
+ const labelPoints=[
+  ['北海道',142.75,43.20],['東北',140.75,39.05],['關東',139.45,35.78],
+  ['中部',137.65,36.15],['近畿',135.38,34.73],['中國・四國',133.15,34.05],['九州',130.72,32.75]
+ ];
+ const projectLabel=(lon,lat)=>[100+(lon-bm[0])/(bm[2]-bm[0])*930,38+(bm[3]-lat)/(bm[3]-bm[1])*520];
+ labelPoints.forEach(([name,lon,lat])=>{const [x,y]=projectLabel(lon,lat),t=document.createElementNS(ns,'text');t.setAttribute('x',x.toFixed(1));t.setAttribute('y',y.toFixed(1));t.setAttribute('class','region-label');t.textContent=name;labels.appendChild(t)});
+ svg.appendChild(labels);
+ $('#mapLoading').hidden=true;filter();
+}
+let tip;function tipShow(id){const p=PREFS.find(x=>x.id===id);if(!tip){tip=document.createElement('div');tip.className='map-tip';$('#mapStage').appendChild(tip)}tip.textContent=`${p.zh}｜${STATUS[STATE[id].status].label}`;tip.hidden=false}function tipMove(e){if(!tip)return;const r=$('#mapStage').getBoundingClientRect();tip.style.left=`${Math.min(e.clientX-r.left+12,r.width-tip.offsetWidth-8)}px`;tip.style.top=`${Math.min(e.clientY-r.top+12,r.height-tip.offsetHeight-8)}px`}function tipHide(){if(tip)tip.hidden=true}
+async function loadMap(){try{draw(await geo())}catch{$('#mapLoading').innerHTML='<div><strong>暫時無法載入地圖</strong><br>下方方塊仍可正常使用。</div>'}}
+buildUI();controls();PREFS.forEach(p=>sync(p.id));stats();filter();loadMap();
+</script>
+</body>
+</html>
